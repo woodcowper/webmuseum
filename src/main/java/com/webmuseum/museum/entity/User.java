@@ -37,4 +37,17 @@ public class User {
             inverseJoinColumns = { @JoinColumn(name = "role_id", referencedColumnName = "id") }
     )
     private List<Role> roles = new ArrayList<>();
+
+    @OneToMany(targetEntity=Exhibit.class, mappedBy="user")
+    private List<Exhibit> exhibits = new ArrayList<>();
+
+    @OneToMany(targetEntity=Event.class, mappedBy="user")
+    private List<Event> events = new ArrayList<>();
+
+    @ManyToMany(targetEntity=Event.class, mappedBy = "subscribers")
+    private List<Event> subscribedEvents = new ArrayList<>();
+
+    @ManyToMany(targetEntity=Category.class, mappedBy = "subscribers")
+    private List<Category> subscribedCategoryEvents = new ArrayList<>();
+
 }
