@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.webmuseum.museum.dto.UserDto;
 import com.webmuseum.museum.entity.User;
-import com.webmuseum.museum.service.UserService;
+import com.webmuseum.museum.service.IUserService;
 
 import jakarta.validation.Valid;
 
@@ -23,9 +23,9 @@ import jakarta.validation.Valid;
 public class AuthController {
 	final String CONTROLLER_VIEW_DIR = "auth/";
 
-    private UserService userService;
+    private IUserService userService;
 
-    public AuthController(UserService userService) {
+    public AuthController(IUserService userService) {
         this.userService = userService;
     }
 
@@ -55,11 +55,11 @@ public class AuthController {
 
         if(result.hasErrors()){
             model.addAttribute("user", userDto);
-            return "/register";
+            return CONTROLLER_VIEW_DIR + "register";
         }
 
         userService.saveUser(userDto);
-        return "redirect:/register?success";
+        return "redirect:/" + CONTROLLER_VIEW_DIR + "register?success";
     }
 
     @GetMapping("/users")
@@ -73,5 +73,10 @@ public class AuthController {
     @GetMapping("/login")
     public String loginForm(){
         return CONTROLLER_VIEW_DIR + "login";
+    }
+
+    @PostMapping("/login")
+    public String login(){
+        return "redirect:/" + CONTROLLER_VIEW_DIR + "users";
     }
 }

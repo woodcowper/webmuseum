@@ -12,10 +12,10 @@ import com.webmuseum.museum.entity.Role;
 import com.webmuseum.museum.entity.User;
 import com.webmuseum.museum.repository.RoleRepository;
 import com.webmuseum.museum.repository.UserRepository;
-import com.webmuseum.museum.service.UserService;
+import com.webmuseum.museum.service.IUserService;
 
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements IUserService {
 
     private UserRepository userRepository;
     private RoleRepository roleRepository;
