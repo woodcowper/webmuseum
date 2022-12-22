@@ -18,6 +18,14 @@ import java.util.List;
 @Entity
 @Table(name = "authors")
 public class Author {
+    
+    public Author(String name, String description, Date birthDate, Date dieDate) {
+        this.name = name;
+        this.description = description;
+        this.birthDate = birthDate;
+        this.dieDate = dieDate;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
