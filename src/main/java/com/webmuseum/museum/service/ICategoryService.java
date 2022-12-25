@@ -29,6 +29,6 @@ public interface ICategoryService {
 
     void saveCategory(CategoryDto categoryDto);
 
-    boolean checkIfExists(String name, CategoryType type);
+    boolean checkIfExistsOthers(Long categoryId, String name, CategoryType type);
     
 }

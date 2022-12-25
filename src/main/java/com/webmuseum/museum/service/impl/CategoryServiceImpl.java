@@ -3,6 +3,7 @@ package com.webmuseum.museum.service.impl;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,7 +78,13 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public boolean checkIfExists(String name, CategoryType type) {
+    public boolean checkIfExistsOthers(Long categoryId, String name, CategoryType type) {
+        if(categoryId != null){
+            return findAllCategoriesByType(type).stream()
+            .filter(category -> category.getName().equals(name))
+            .filter(category -> category.getId() != categoryId)
+            .count() > 0;
+        }
         return findAllCategoriesByType(type).stream()
             .filter(category -> category.getName().equals(name))
             .count() > 0;
