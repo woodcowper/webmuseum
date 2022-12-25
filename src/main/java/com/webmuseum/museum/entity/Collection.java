@@ -30,4 +30,7 @@ public class Collection {
     @OneToMany(targetEntity=ExhibitAuthor.class, mappedBy="collection")
     private List<ExhibitAuthor> exhibitAuthors = new ArrayList<>();
     
+    @ManyToOne
+    @JoinColumn(name="author_id", referencedColumnName = "id", nullable=false)
+    private Author author;
 }

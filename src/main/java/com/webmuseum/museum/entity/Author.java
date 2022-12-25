@@ -49,4 +49,7 @@ public class Author {
         orphanRemoval = true
     )
     private List<ExhibitAuthor> exhibits = new ArrayList<>();
+
+    @OneToMany(targetEntity=Collection.class, mappedBy="author")
+    private List<Collection> collections = new ArrayList<>();
 }
