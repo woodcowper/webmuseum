@@ -3,8 +3,6 @@ package com.webmuseum.museum.service.impl;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,13 +19,23 @@ public class CategoryServiceImpl implements ICategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
+    public List<Category> findAllEventCategoriesWithIds(List<Long> ids){
+        return findAllWithIds(ids, CategoryType.EVENT);
+    }
+
+    @Override
+    public List<Category> findAllExhibitCategoriesWithIds(List<Long> ids){
+        return findAllWithIds(ids, CategoryType.EXHIBIT);
+    }
+
+    @Override
     public List<CategoryDto> findAllEventCategories() {
-        return findAllCategoriesByType(CategoryType.EVENT);
+        return findAllCategoriesDtoByType(CategoryType.EVENT);
     }
 
     @Override
     public List<CategoryDto> findAllExhibitCategories() {
-        return findAllCategoriesByType(CategoryType.EXHIBIT);
+        return findAllCategoriesDtoByType(CategoryType.EXHIBIT);
     }
 
     @Override
@@ -110,13 +118,24 @@ public class CategoryServiceImpl implements ICategoryService {
         return category;
     }
 
-    public List<CategoryDto> findAllCategoriesByType(CategoryType type) {
+    private List<Category> findAllCategoriesByType(CategoryType type) {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
                 .filter(category -> category.getType() == type)
                 .sorted((category1, category2) -> category1.getName().compareTo(category2.getName()))
+                .collect(Collectors.toList());
+    }
+
+    private List<CategoryDto> findAllCategoriesDtoByType(CategoryType type) {
+        return findAllCategoriesByType(type).stream()
                 .map((category) -> mapToCategoryDto(category))
                 .collect(Collectors.toList());
+    }
+
+    private List<Category> findAllWithIds(List<Long> ids, CategoryType type){
+        return findAllCategoriesByType(type).stream()
+            .filter((category) -> ids.contains(category.getId()))
+            .toList();
     }
     
 }

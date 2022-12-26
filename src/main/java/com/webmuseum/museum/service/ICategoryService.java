@@ -9,6 +9,10 @@ import com.webmuseum.museum.entity.CategoryType;
 
 public interface ICategoryService {
 
+    List<Category> findAllEventCategoriesWithIds(List<Long> ids);
+
+    List<Category> findAllExhibitCategoriesWithIds(List<Long> ids);
+
     List<CategoryDto> findAllEventCategories();
 
     List<CategoryDto> findAllExhibitCategories();
