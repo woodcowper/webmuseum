@@ -46,13 +46,6 @@ public class Exhibit {
     @Column(nullable = false)
     private String qrUrl;
 
-    @Column(nullable = true)
-    private Date date;
-
-    @ManyToOne
-    @JoinColumn(name="user_id", referencedColumnName = "id", nullable=false)
-    private User user;
-
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "exhibit_category",

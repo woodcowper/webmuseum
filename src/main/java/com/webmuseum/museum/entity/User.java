@@ -38,9 +38,6 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @OneToMany(targetEntity=Exhibit.class, mappedBy="user")
-    private List<Exhibit> exhibits = new ArrayList<>();
-
     @OneToMany(targetEntity=Event.class, mappedBy="user")
     private List<Event> events = new ArrayList<>();
 
