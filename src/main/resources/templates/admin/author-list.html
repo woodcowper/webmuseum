@@ -1,0 +1,28 @@
+<div th:replace="fragments/header"></div>
+
+
+<div class="container">
+    <h3>Authors: <a th:href="@{/admin/author-add}" class="btn btn-outline-success">Add</a></h3>
+      <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Data</th>
+            <th scope="col">Controls</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr th:each="author: ${authors}">
+                <td scope="row" th:text="${author.id}" />
+                <td th:text="${author.fullName}" />
+                <td>
+                    <a href="" class="btn btn-outline-primary">View</a>
+                    <a th:href="@{/admin/author-edit(id=${author.id})}" class="btn btn-outline-warning">Edit</a>
+                    <a th:href="@{/admin/author-delete(id=${author.id})}" class="btn btn-outline-danger">Delete</a>
+                    <a th:href="@{/admin/collection-list(authorId=${author.id})}" class="btn btn-info">Collections</a>
+                </td>
+            </tr>
+      </table>
+</div>
+
+<div th:replace="fragments/footer"></div>

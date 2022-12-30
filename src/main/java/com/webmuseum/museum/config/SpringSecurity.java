@@ -26,6 +26,7 @@ public class SpringSecurity {
                 .requestMatchers("/ajax/**").permitAll()
                 .requestMatchers("/main/**").permitAll()
                 .requestMatchers("/image/**").permitAll()
+                .requestMatchers("/admin/**").permitAll()
                 .requestMatchers("/auth/register/**").permitAll()
                 .requestMatchers("/auth/index").permitAll()
                 .requestMatchers("/auth/users").hasRole("ADMIN")
