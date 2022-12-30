@@ -112,7 +112,6 @@ public class StorageServiceImpl implements IStorageService{
 	public void delete(String filename) {
 		Path filePath = rootLocation.resolve(filename).normalize().toAbsolutePath();
 		try {
-			System.out.println("------DELETE file :" + filePath);
 			Files.delete(filePath);
 		} catch (IOException e) {
 			throw new RuntimeException("Could not delete file: " + filePath, e);
