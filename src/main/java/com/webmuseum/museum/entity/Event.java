@@ -36,17 +36,13 @@ public class Event {
     private String name;
 
     @Column(nullable = true)
-    private String imgUrl;
+    private String imgFileName;
 
     @Column(nullable = true)
     private String description;
 
     @Column(nullable = true)
     private Date date;
-
-    @ManyToOne
-    @JoinColumn(name="user_id", referencedColumnName = "id", nullable=false)
-    private User user;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(

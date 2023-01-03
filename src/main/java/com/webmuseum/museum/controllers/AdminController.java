@@ -4,9 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,16 +11,13 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-
-import com.google.gson.Gson;
 import com.webmuseum.museum.dto.AuthorDto;
 import com.webmuseum.museum.dto.CategoryDto;
 import com.webmuseum.museum.dto.CollectionDto;
+import com.webmuseum.museum.dto.EventDto;
 import com.webmuseum.museum.dto.ExhibitAuthorDto;
 import com.webmuseum.museum.dto.ExhibitDto;
 import com.webmuseum.museum.entity.Author;
@@ -31,11 +25,9 @@ import com.webmuseum.museum.entity.CategoryType;
 import com.webmuseum.museum.service.IAuthorService;
 import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.ICollectionService;
+import com.webmuseum.museum.service.IEventService;
 import com.webmuseum.museum.service.IExhibitService;
-import com.webmuseum.museum.service.IStorageService;
 import com.webmuseum.museum.utils.DateHelper;
-import com.webmuseum.museum.utils.ResourceHelper;
-
 import jakarta.validation.Valid;
 
 @Controller
@@ -54,6 +46,9 @@ public class AdminController {
 
     @Autowired
     private IExhibitService exhibitService;
+
+    @Autowired
+    private IEventService eventService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -295,5 +290,50 @@ public class AdminController {
 
     /* END Exhibit */
     /* -------------------------- */
+
+        /* Event */
+        @GetMapping("/event-list")
+        public String eventList(Model model) {
+            model.addAttribute("events", eventService.findAllEvents());
+            return CONTROLLER_VIEW_DIR + "event-list";
+        }
+    
+        @GetMapping("/event-add")
+        private String eventAdd(Model model) {
+            EventDto event = new EventDto();
+            model.addAttribute("event", event);
+            model.addAttribute("categoriesList", categoryService.findAllEventCategories());
+            return CONTROLLER_VIEW_DIR + "event-add";
+        }
+    
+        @GetMapping("/event-edit")
+        public String eventEdit(@RequestParam long id, Model model) {
+            EventDto event = eventService.getEventDtoById(id);
+            model.addAttribute("event", event);
+            model.addAttribute("categoriesList", categoryService.findAllEventCategories());
+            return CONTROLLER_VIEW_DIR + "event-add";
+        }
+    
+        @PostMapping("/event-save")
+        public String eventSave(@Valid @ModelAttribute("event") EventDto event, BindingResult result, Model model) {
+            if (result.hasErrors()) {
+                model.addAttribute("event", event);
+                model.addAttribute("categoriesList", categoryService.findAllEventCategories());
+    
+                return CONTROLLER_VIEW_DIR + "event-add";
+            }
+            
+            eventService.saveEvent(event);
+            return "redirect:/" + CONTROLLER_VIEW_DIR + "event-list";
+        }
+    
+        @GetMapping("/event-delete")
+        public String eventDelete(@RequestParam(name="id", required=true) long id, Model model) {
+            eventService.deleteEvent(id);
+            return "redirect:/" + CONTROLLER_VIEW_DIR + "event-list";
+        }
+    
+        /* END Event */
+        /* -------------------------- */
 
 }

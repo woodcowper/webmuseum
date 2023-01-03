@@ -1,0 +1,112 @@
+<div th:replace="fragments/header"></div>
+
+
+<div class="container">
+    <h3>Add event</h3>
+     
+    <form method="post"
+          role="form"
+          th:action="@{/admin/event-save}"
+          th:object="${event}"
+          enctype="multipart/form-data">
+
+      <input
+          name="id"
+          th:field="*{id}"
+          type="hidden"
+      />
+
+      <input
+          name="imgFileName"
+          id="imgFileName"
+          th:field="*{imgFileName}"
+          type="hidden"
+      />
+
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input
+          class="form-control"
+          id="name"
+          name="name"
+          placeholder="Enter name"
+          th:field="*{name}"
+          type="text"
+        />
+        <p th:errors = "*{name}" class="text-danger"
+              th:if="${#fields.hasErrors('name')}"></p>
+        
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea
+                class="form-control"
+                id="description"
+                name="description"
+                placeholder="Enter description"
+                th:field="*{description}"
+                type="text"
+        ></textarea>
+        <div th:errors = "*{description}" class="text-danger"
+           th:if="${#fields.hasErrors('description')}"></div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Date</label>
+        <input
+              class="form-control"
+              id="date"
+              name="date"
+              placeholder="Enter date"
+              th:field="*{date}"
+              type="date"
+            />
+            <p th:errors = "*{date}" class="text-danger"
+            th:if="${#fields.hasErrors('date')}"></p>
+      </div>
+
+      <div class="mb-3" id="select-img-block">
+        <label class="form-label">Image</label>
+        <input
+          class="form-control"
+          id="image"
+          name="image"
+          placeholder="Select image"
+          th:field="*{image}"
+          type="file"
+        />
+        <p th:errors = "*{image}" class="text-danger"
+              th:if="${#fields.hasErrors('image')}"></p>
+      </div>
+
+      <div class="mb-3" id="select-img-block">
+        <label class="form-label">Categories</label>
+        <select th:field="*{categories}" multiple class="w-100">
+            <option th:each="category : ${categoriesList}" 
+                    th:value="${category.id}" 
+                    th:text="${category.name}" 
+                    th:selected="${event.categories.contains(category.id)}"
+                    data-placeholder="Select categories"></option>
+        </select>
+      </div>
+
+      <div class="mb-3" id="img-block">
+        <div class="row">
+          <div class="col-3">
+            <img th:src="${event.imgUrl}" class="w-100" id="img-tag">
+          </div>
+        </div>
+        <button type="button" id="delete-img" class="btn btn-outline-danger">Delete image</button>
+      </div>
+      
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+
+    </form>
+</div>
+
+
+<div th:replace="fragments/footer"></div>
+
