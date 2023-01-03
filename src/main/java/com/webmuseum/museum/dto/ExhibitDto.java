@@ -33,6 +33,6 @@ public class ExhibitDto {
 
     private List<ExhibitAuthorDto> authors = new ArrayList<>();
 
-    private List<Long> categories = new ArrayList<>();;
+    private List<Long> categories = new ArrayList<>();
     
 }

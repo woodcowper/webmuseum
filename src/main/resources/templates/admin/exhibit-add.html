@@ -38,6 +38,20 @@
         
       </div>
 
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea
+                class="form-control"
+                id="description"
+                name="description"
+                placeholder="Enter description"
+                th:field="*{description}"
+                type="text"
+        ></textarea>
+        <div th:errors = "*{description}" class="text-danger"
+           th:if="${#fields.hasErrors('description')}"></div>
+      </div>
+
       <div class="mb-3" id="select-img-block">
         <label class="form-label">Image</label>
         <input
