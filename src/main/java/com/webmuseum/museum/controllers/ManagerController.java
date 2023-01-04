@@ -31,9 +31,9 @@ import com.webmuseum.museum.utils.DateHelper;
 import jakarta.validation.Valid;
 
 @Controller
-@RequestMapping ("admin")
-public class AdminController {
-    final String CONTROLLER_VIEW_DIR = "admin/";
+@RequestMapping ("manager")
+public class ManagerController {
+    final String CONTROLLER_VIEW_DIR = "manager/";
 
     @Autowired
     private IAuthorService authorService;
@@ -54,6 +54,12 @@ public class AdminController {
     public void initBinder(WebDataBinder binder) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+    }
+
+    /* Index */
+    @GetMapping({"/index", "/", ""})
+    public String index(Model model) {
+        return CONTROLLER_VIEW_DIR + "index";
     }
 
     /* Author */
@@ -261,6 +267,7 @@ public class AdminController {
 
     @PostMapping("/exhibit-save")
     public String exhibitSave(@Valid @ModelAttribute("exhibit") ExhibitDto exhibit, BindingResult result, Model model) {
+        exhibit.clearEmptyAuthors();
         for(ExhibitAuthorDto exhibitAthor: exhibit.getAuthors()){
             if(exhibitService.checkIfExistsOthers(exhibit.getId(), exhibit.getName(), exhibitAthor.getAuthorId())){
                 String authorName = authorService.getAuthorById(exhibitAthor.getAuthorId()).get().getName();

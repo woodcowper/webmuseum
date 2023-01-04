@@ -2,7 +2,7 @@
 
 
 <div class="container">
-    <h3>Authors: <a th:href="@{/admin/author-add}" class="btn btn-outline-success">Add</a></h3>
+    <h3>Authors: <a th:href="@{/manager/author-add}" class="btn btn-outline-success">Add</a></h3>
       <table class="table">
         <thead class="table-dark">
           <tr>
@@ -17,9 +17,9 @@
                 <td th:text="${author.fullName}" />
                 <td>
                     <a href="" class="btn btn-outline-primary">View</a>
-                    <a th:href="@{/admin/author-edit(id=${author.id})}" class="btn btn-outline-warning">Edit</a>
-                    <a th:href="@{/admin/author-delete(id=${author.id})}" class="btn btn-outline-danger">Delete</a>
-                    <a th:href="@{/admin/collection-list(authorId=${author.id})}" class="btn btn-info">Collections</a>
+                    <a th:href="@{/manager/author-edit(id=${author.id})}" class="btn btn-outline-warning">Edit</a>
+                    <a th:href="@{/manager/author-delete(id=${author.id})}" class="btn btn-outline-danger">Delete</a>
+                    <a th:href="@{/manager/collection-list(authorId=${author.id})}" class="btn btn-info">Collections</a>
                 </td>
             </tr>
       </table>

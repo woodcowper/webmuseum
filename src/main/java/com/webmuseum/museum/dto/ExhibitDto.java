@@ -34,5 +34,9 @@ public class ExhibitDto {
     private List<ExhibitAuthorDto> authors = new ArrayList<>();
 
     private List<Long> categories = new ArrayList<>();
+
+    public void clearEmptyAuthors(){
+        authors.removeIf(author -> author.getAuthorId() == null);
+    }
     
 }

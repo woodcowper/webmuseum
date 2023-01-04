@@ -2,7 +2,7 @@
 
 
 <div class="container">
-    <h3>Exhibits: <a th:href="@{'/admin/exhibit-add'}" class="btn btn-outline-success">Add</a></h3>
+    <h3>Events: <a th:href="@{'/manager/event-add'}" class="btn btn-outline-success">Add</a></h3>
       <table class="table">
         <thead class="table-dark">
           <tr>
@@ -12,13 +12,13 @@
           </tr>
         </thead>
         <tbody>
-            <tr th:each="exhibit: ${exhibits}">
-                <td scope="row" th:text="${exhibit.id}" />
-                <td th:text="${exhibit.name}" />
+            <tr th:each="event: ${events}">
+                <td scope="row" th:text="${event.id}" />
+                <td th:text="${event.name}" />
                 <td>
                     <a href="" class="btn btn-outline-primary">View</a>
-                    <a th:href="@{/admin/exhibit-edit(id=${exhibit.id})}" class="btn btn-outline-warning">Edit</a>
-                    <a th:href="@{/admin/exhibit-delete(id=${exhibit.id})}" class="btn btn-outline-danger">Delete</a>
+                    <a th:href="@{/manager/event-edit(id=${event.id})}" class="btn btn-outline-warning">Edit</a>
+                    <a th:href="@{/manager/event-delete(id=${event.id})}" class="btn btn-outline-danger">Delete</a>
                 </td>
             </tr>
       </table>
