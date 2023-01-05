@@ -29,6 +29,7 @@ public class ExhibitDto {
 
     private MultipartFile image;
 
+    @Size(max = 1000)
     private String description;
 
     private List<ExhibitAuthorDto> authors = new ArrayList<>();

@@ -18,6 +18,7 @@ public class AuthorDto {
     @Size(min = 3)
     private String fullName;
 
+    @Size(max = 1000)
     private String description;
 
     private String birthDate;

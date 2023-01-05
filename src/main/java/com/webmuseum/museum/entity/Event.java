@@ -38,7 +38,7 @@ public class Event {
     @Column(nullable = true)
     private String imgFileName;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 1000)
     private String description;
 
     @Column(nullable = true)

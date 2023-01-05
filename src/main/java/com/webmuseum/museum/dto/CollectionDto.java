@@ -19,6 +19,7 @@ public class CollectionDto {
     @Size(min = 3)
     private String name;
 
+    @Size(max = 1000)
     private String description;
 
     private Long authorId;

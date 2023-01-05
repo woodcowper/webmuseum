@@ -29,6 +29,7 @@ public class EventDto {
 
     private MultipartFile image;
 
+    @Size(max = 1000)
     private String description;
 
     private List<Long> categories = new ArrayList<>();
