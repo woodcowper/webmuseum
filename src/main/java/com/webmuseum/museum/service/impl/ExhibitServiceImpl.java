@@ -15,7 +15,11 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.exc.StreamWriteException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webmuseum.museum.dto.AuthorViewDto;
+import com.webmuseum.museum.dto.CollectionViewDto;
+import com.webmuseum.museum.dto.ExhibitAuthorViewDto;
 import com.webmuseum.museum.dto.ExhibitDto;
+import com.webmuseum.museum.dto.ExhibitViewDto;
 import com.webmuseum.museum.entity.Exhibit;
 import com.webmuseum.museum.entity.ExhibitAuthor;
 import com.webmuseum.museum.repository.ExhibitRepository;
@@ -23,6 +27,7 @@ import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.IExhibitAuthorService;
 import com.webmuseum.museum.service.IExhibitService;
 import com.webmuseum.museum.service.IStorageService;
+import com.webmuseum.museum.utils.DateHelper;
 import com.webmuseum.museum.utils.ResourceHelper;
 
 @Service
@@ -111,6 +116,49 @@ public class ExhibitServiceImpl implements IExhibitService {
                                         && exhibit.getId() != exhibitId)
                 .findAny()
                 .isPresent();
+    }
+
+    @Override
+    public ExhibitViewDto getExhibitViewDto(Long exhibitId){
+        Optional<Exhibit> exhibitOpt = getExhibitById(exhibitId);
+		if(!exhibitOpt.isPresent()){
+			// return error
+		}
+        // exhibit info
+        Exhibit exhibit = exhibitOpt.get();
+        ExhibitViewDto exhibitViewDto = new ExhibitViewDto();
+        exhibitViewDto.setName(exhibit.getName());
+        exhibitViewDto.setDescription(exhibit.getDescription());
+        if(exhibit.getImgFileName() != null && !exhibit.getImgFileName().isEmpty()){
+            exhibitViewDto.setImgUrl(ResourceHelper.getImgUrl(exhibit.getImgFileName()));
+        }
+        // categories info
+        exhibitViewDto.setCategories(exhibit.getCategories().stream().map((category) -> category.getName()).toList());
+        // exhibitAuthor info
+        List<ExhibitAuthorViewDto> authors = new ArrayList<>();
+        for(ExhibitAuthor authorExhibit : exhibit.getAuthors()){
+            ExhibitAuthorViewDto exhibitAuthorViewDto = new ExhibitAuthorViewDto();
+            // collection info
+            if(authorExhibit.getCollection() != null){
+                exhibitAuthorViewDto.setCollection(new CollectionViewDto(authorExhibit.getCollection().getName(), authorExhibit.getCollection().getDescription()));
+            }
+            // author info
+            AuthorViewDto authorViewDto = new AuthorViewDto();
+            authorViewDto.setName(authorExhibit.getAuthor().getName());
+            authorViewDto.setDescription(authorExhibit.getAuthor().getDescription());
+            String datesLife = "";
+            if(authorExhibit.getAuthor().getBirthDate() != null){
+                datesLife += DateHelper.parseDateToStr(authorExhibit.getAuthor().getBirthDate());
+                if(authorExhibit.getAuthor().getDieDate() != null){
+                    datesLife += " - " + DateHelper.parseDateToStr(authorExhibit.getAuthor().getDieDate());
+                }
+            }
+            authorViewDto.setDatesLife(datesLife);
+            exhibitAuthorViewDto.setAuthor(authorViewDto);
+            authors.add(exhibitAuthorViewDto);
+        }
+        exhibitViewDto.setAuthors(authors);
+        return exhibitViewDto;
     }
 
     private ExhibitDto mapToExhibitDto(Exhibit exhibit){

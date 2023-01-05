@@ -1,9 +1,12 @@
 package com.webmuseum.museum.service.impl;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,38 +15,35 @@ import com.webmuseum.museum.entity.Role;
 import com.webmuseum.museum.entity.User;
 import com.webmuseum.museum.repository.RoleRepository;
 import com.webmuseum.museum.repository.UserRepository;
+import com.webmuseum.museum.service.IRoleService;
 import com.webmuseum.museum.service.IUserService;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
+    @Autowired
     private UserRepository userRepository;
-    private RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public UserServiceImpl(UserRepository userRepository,
-                           RoleRepository roleRepository,
-                           PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
+    @Autowired
+    private IRoleService roleService;
 
     @Override
     public void saveUser(UserDto userDto) {
-        User user = new User();
-        user.setName(userDto.getFirstName() + " " + userDto.getLastName());
-        user.setEmail(userDto.getEmail());
-
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-
-        Role role = roleRepository.findByName("ROLE_ADMIN");
-        if(role == null){
-            role = checkRoleExist();
-        }
-        user.setRoles(Arrays.asList(role));
+        User user = mapToUser(userDto);
         userRepository.save(user);
     }
+
+    @Override
+    public void deleteUser(long id){
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            userRepository.delete(user.get());
+        }
+    }
+
 
     @Override
     public User findUserByEmail(String email) {
@@ -58,18 +58,65 @@ public class UserServiceImpl implements IUserService {
                 .collect(Collectors.toList());
     }
 
-    private UserDto mapToUserDto(User user){
+    @Override
+    public List<UserDto> findAllManagers() {
+        Role role = roleService.getManagerRole();
+        return findAllByRole(role);
+    }
+
+    @Override
+    public List<UserDto> findAllClients() {
+        Role role = roleService.getClientRole();
+        return findAllByRole(role);
+    }
+
+    @Override
+    public UserDto createEmptyUserDtoForClient() {
         UserDto userDto = new UserDto();
-        String[] str = user.getName().split(" ");
-        userDto.setFirstName(str[0]);
-        userDto.setLastName(str[1]);
-        userDto.setEmail(user.getEmail());
+        userDto.setRoles(List.of(roleService.getClientRole().getId()));
         return userDto;
     }
 
-    private Role checkRoleExist(){
-        Role role = new Role();
-        role.setName("ROLE_ADMIN");
-        return roleRepository.save(role);
+    @Override
+    public UserDto createEmptyUserDtoForManager() {
+        UserDto userDto = new UserDto();
+        userDto.setRoles(List.of(roleService.getClientRole().getId(), roleService.getManagerRole().getId()));
+        return userDto;
     }
+
+    private UserDto mapToUserDto(User user){
+        UserDto userDto = new UserDto();
+        userDto.setName(user.getName());
+        userDto.setEmail(user.getEmail());
+        userDto.setRoles(roleService.getRolesIds(user.getRoles()));
+        return userDto;
+    }
+
+    private User mapToUser(UserDto userDto){
+        User user;
+        if(userDto.getId() == null){
+            user = new User();
+        } else {
+            user = userRepository.findById(userDto.getId()).get();
+        }
+        user.setName(userDto.getName());
+        user.setEmail(userDto.getEmail());
+        if(userDto.getPassword() != null && !userDto.getPassword().isEmpty()){
+            user.setPassword(passwordEncoder.encode(userDto.getPassword()));
+        }
+        user.getRoles().clear();
+        user.getRoles().addAll(roleService.getRolesByIds(userDto.getRoles()));
+        return user;
+    }
+
+    private List<UserDto> findAllByRole(Role role){
+        if(role == null){
+            return new ArrayList<UserDto>();
+        }
+        return role.getUsers().stream()
+                .map((user) -> mapToUserDto(user))
+                .collect(Collectors.toList());
+
+    }
+
 }

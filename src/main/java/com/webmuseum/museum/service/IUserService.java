@@ -10,5 +10,17 @@ public interface IUserService {
 
     User findUserByEmail(String email);
 
+    void deleteUser(long id);
+
     List<UserDto> findAllUsers();
+
+    List<UserDto> findAllManagers();
+
+    List<UserDto> findAllClients();
+
+    UserDto createEmptyUserDtoForClient();
+
+    UserDto createEmptyUserDtoForManager();
+
+
 }

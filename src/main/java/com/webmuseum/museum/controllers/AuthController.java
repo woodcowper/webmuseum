@@ -2,6 +2,8 @@ package com.webmuseum.museum.controllers;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.SpringVersion;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.webmuseum.museum.dto.UserDto;
 import com.webmuseum.museum.entity.User;
+import com.webmuseum.museum.service.IRoleService;
 import com.webmuseum.museum.service.IUserService;
 
 import jakarta.validation.Valid;
@@ -23,21 +26,20 @@ import jakarta.validation.Valid;
 public class AuthController {
 	final String CONTROLLER_VIEW_DIR = "auth/";
 
+    @Autowired
     private IUserService userService;
 
-    public AuthController(IUserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private IRoleService roleService;
 
     @GetMapping("/index")
-    public String home(){
+    public String index(){
         return CONTROLLER_VIEW_DIR + "index";
     }
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model){
-        // create model object to store form data
-        UserDto user = new UserDto();
+        UserDto user = userService.createEmptyUserDtoForClient();
         model.addAttribute("user", user);
         return CONTROLLER_VIEW_DIR + "register";
     }
@@ -46,8 +48,13 @@ public class AuthController {
     public String registration(@Valid @ModelAttribute("user") UserDto userDto,
                                BindingResult result,
                                Model model){
-        User existingUser = userService.findUserByEmail(userDto.getEmail());
+        
+        if(userDto.getPassword().isEmpty()){
+            result.rejectValue("password", null,
+                    "Password should not be empty");
+        }
 
+        User existingUser = userService.findUserByEmail(userDto.getEmail());
         if(existingUser != null && existingUser.getEmail() != null && !existingUser.getEmail().isEmpty()){
             result.rejectValue("email", null,
                     "There is already an account registered with the same email");
@@ -58,6 +65,7 @@ public class AuthController {
             return CONTROLLER_VIEW_DIR + "register";
         }
 
+        userDto.setRoles(List.of(roleService.getClientRole().getId()));
         userService.saveUser(userDto);
         return "redirect:/" + CONTROLLER_VIEW_DIR + "register?success";
     }
@@ -73,10 +81,5 @@ public class AuthController {
     @GetMapping("/login")
     public String loginForm(){
         return CONTROLLER_VIEW_DIR + "login";
-    }
-
-    @PostMapping("/login")
-    public String login(){
-        return "redirect:/" + CONTROLLER_VIEW_DIR + "users";
     }
 }
