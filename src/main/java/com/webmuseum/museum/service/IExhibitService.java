@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.webmuseum.museum.dto.ExhibitDto;
+import com.webmuseum.museum.dto.ExhibitViewDto;
 import com.webmuseum.museum.entity.Exhibit;
 
 public interface IExhibitService {
@@ -22,4 +23,6 @@ public interface IExhibitService {
     void saveExhibit(ExhibitDto exhibit);
 
     boolean checkIfExistsOthers(Long exhibitId, String name, Long authorId);
+
+    ExhibitViewDto getExhibitViewDto(Long exhibitId);
 }
