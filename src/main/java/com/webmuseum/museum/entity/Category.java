@@ -3,6 +3,8 @@ package com.webmuseum.museum.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.webmuseum.museum.models.ECategoryType;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -37,7 +39,7 @@ public class Category {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category_type", nullable = false)
-    private CategoryType type;
+    private ECategoryType type;
 
     @ManyToMany(targetEntity=Exhibit.class, mappedBy = "categories")
     private List<Exhibit> exhibits = new ArrayList<>();
