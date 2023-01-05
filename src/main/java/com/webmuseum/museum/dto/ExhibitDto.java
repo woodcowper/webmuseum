@@ -29,6 +29,8 @@ public class ExhibitDto {
 
     private MultipartFile image;
 
+    private String qrUrl;
+
     @Size(max = 1000)
     private String description;
 

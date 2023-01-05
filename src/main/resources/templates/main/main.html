@@ -1,10 +1,45 @@
-<!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
-<head> 
-    <title>Getting Started: Serving Web Content</title> 
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-</head>
-<body>
-    <p th:text="'Hello name is, ' + ${name} + '!'" />
-</body>
-</html>
+<div th:replace="fragments/header-with-sidebar"></div>
+
+    <div class="container">
+      <h2>Hello</h2>
+      <ul>
+        <li>--------Author------</li>
+        <li><a th:href="@{/manager/author-list}">Authors</a></li>
+        <li>-------</li>
+        <li>--------Category------</li>
+        <li><a th:href="@{/manager/category-event-list}">Event categories</a></li>
+        <li><a th:href="@{/manager/category-exhibit-list}">Exhibit categories</a></li>
+        <li>--------Exhibit------</li>
+        <li><a th:href="@{/manager/exhibit-list}">Exhibits</a></li>
+        <li>--------Events------</li>
+        <li><a th:href="@{/manager/event-list}">Events</a></li>
+        <li>-------</li>
+      </ul>
+
+      <!-- List page template -->
+      <h3>Template table</h3>
+      <h3>TITLE: <a href="" class="btn btn-outline-success">Add</a></h3>
+      <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Data</th>
+            <th scope="col">Controls</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <th scope="row">1</th>
+            <td>Data</td>
+            <td>
+              <a href="" class="btn btn-outline-primary">View</a>
+              <a href="" class="btn btn-outline-warning">Edit</a>
+              <a href="" class="btn btn-outline-danger">Delete</a>
+          </td>
+          </tr>
+      </table>
+      <!-- List page template END -->
+
+    </div>
+
+<div th:replace="fragments/footer"></div>
