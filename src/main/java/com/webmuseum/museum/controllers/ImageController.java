@@ -21,7 +21,7 @@ public class ImageController {
     
     @GetMapping("/{filename:.+}")
     public ResponseEntity<Resource> getImage(@PathVariable String filename) {
-      Resource file = storageService.loadAsResource(filename);
+      Resource file = storageService.loadImgAsResource(filename);
   
       return ResponseEntity.ok()
           .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);

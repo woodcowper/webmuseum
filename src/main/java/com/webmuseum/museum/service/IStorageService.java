@@ -10,16 +10,28 @@ public interface IStorageService {
 
 	void init();
 
-	String store(MultipartFile file, String prefix);
+	String storeImg(MultipartFile file, String prefix);
 
-	Stream<Path> loadAll();
+	Stream<Path> loadAllImg();
 
-	Path load(String filename);
+	Path loadImg(String filename);
 
-	Resource loadAsResource(String filename);
+	Resource loadImgAsResource(String filename);
 
-	void deleteAll();
+	void deleteAllImg();
 
-	void delete(String filename);
+	void deleteImg(String filename);
+
+	String storeQR(String text, String name);
+
+	Stream<Path> loadAllQR();
+
+	Path loadQR(String filename);
+
+	Resource loadAsResourceQR(String filename);
+
+	void deleteAllQR();
+
+	void deleteQR(String filename);
 
 }
