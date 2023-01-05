@@ -41,7 +41,7 @@ public class Exhibit {
     private String description;
 
     @Column(nullable = true)
-    private String qrUrl;
+    private String qrFileName;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
