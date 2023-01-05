@@ -1,6 +1,6 @@
 package com.webmuseum.museum.dto;
 
-import com.webmuseum.museum.entity.CategoryType;
+import com.webmuseum.museum.models.ECategoryType;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -21,13 +21,13 @@ public class CategoryDto {
     private String name;
 
     @NotNull
-    private CategoryType type;
+    private ECategoryType type;
 
-    public CategoryDto(CategoryType type) {
+    public CategoryDto(ECategoryType type) {
         this.type = type;
     }
 
     public CategoryDto() {
-        this.type = CategoryType.EVENT;
+        this.type = ECategoryType.EVENT;
     }
 }

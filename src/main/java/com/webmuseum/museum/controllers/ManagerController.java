@@ -21,7 +21,7 @@ import com.webmuseum.museum.dto.EventDto;
 import com.webmuseum.museum.dto.ExhibitAuthorDto;
 import com.webmuseum.museum.dto.ExhibitDto;
 import com.webmuseum.museum.entity.Author;
-import com.webmuseum.museum.entity.CategoryType;
+import com.webmuseum.museum.models.ECategoryType;
 import com.webmuseum.museum.service.IAuthorService;
 import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.ICollectionService;
@@ -121,7 +121,7 @@ public class ManagerController {
 
     @GetMapping("/category-event-add")
     public String categoryEventAdd(Model model) {
-        return categoryAdd(model, CategoryType.EVENT);
+        return categoryAdd(model, ECategoryType.EVENT);
     }
     /* END Event category */
 
@@ -136,12 +136,12 @@ public class ManagerController {
 
     @GetMapping("/category-exhibit-add")
     public String categoryExhibitAdd(Model model) {
-        return categoryAdd(model, CategoryType.EXHIBIT);
+        return categoryAdd(model, ECategoryType.EXHIBIT);
     }
     /* END Exhibit category */
 
     /* Category */
-    private String categoryAdd(Model model, CategoryType type) {
+    private String categoryAdd(Model model, ECategoryType type) {
         model.addAttribute("category", new CategoryDto(type));
         model.addAttribute("type", type.name());
         return CONTROLLER_VIEW_DIR + "category-add";

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.webmuseum.museum.dto.CategoryDto;
 import com.webmuseum.museum.entity.Category;
-import com.webmuseum.museum.entity.CategoryType;
+import com.webmuseum.museum.models.ECategoryType;
 import com.webmuseum.museum.repository.CategoryRepository;
 import com.webmuseum.museum.service.ICategoryService;
 
@@ -20,22 +20,22 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Override
     public List<Category> findAllEventCategoriesWithIds(List<Long> ids){
-        return findAllWithIds(ids, CategoryType.EVENT);
+        return findAllWithIds(ids, ECategoryType.EVENT);
     }
 
     @Override
     public List<Category> findAllExhibitCategoriesWithIds(List<Long> ids){
-        return findAllWithIds(ids, CategoryType.EXHIBIT);
+        return findAllWithIds(ids, ECategoryType.EXHIBIT);
     }
 
     @Override
     public List<CategoryDto> findAllEventCategories() {
-        return findAllCategoriesDtoByType(CategoryType.EVENT);
+        return findAllCategoriesDtoByType(ECategoryType.EVENT);
     }
 
     @Override
     public List<CategoryDto> findAllExhibitCategories() {
-        return findAllCategoriesDtoByType(CategoryType.EXHIBIT);
+        return findAllCategoriesDtoByType(ECategoryType.EXHIBIT);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class CategoryServiceImpl implements ICategoryService {
     }
 
     @Override
-    public boolean checkIfExistsOthers(Long categoryId, String name, CategoryType type) {
+    public boolean checkIfExistsOthers(Long categoryId, String name, ECategoryType type) {
         if(categoryId != null){
             return findAllCategoriesByType(type).stream()
             .filter(category -> category.getName().equals(name))
@@ -118,7 +118,7 @@ public class CategoryServiceImpl implements ICategoryService {
         return category;
     }
 
-    private List<Category> findAllCategoriesByType(CategoryType type) {
+    private List<Category> findAllCategoriesByType(ECategoryType type) {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
                 .filter(category -> category.getType() == type)
@@ -126,13 +126,13 @@ public class CategoryServiceImpl implements ICategoryService {
                 .collect(Collectors.toList());
     }
 
-    private List<CategoryDto> findAllCategoriesDtoByType(CategoryType type) {
+    private List<CategoryDto> findAllCategoriesDtoByType(ECategoryType type) {
         return findAllCategoriesByType(type).stream()
                 .map((category) -> mapToCategoryDto(category))
                 .collect(Collectors.toList());
     }
 
-    private List<Category> findAllWithIds(List<Long> ids, CategoryType type){
+    private List<Category> findAllWithIds(List<Long> ids, ECategoryType type){
         return findAllCategoriesByType(type).stream()
             .filter((category) -> ids.contains(category.getId()))
             .toList();
