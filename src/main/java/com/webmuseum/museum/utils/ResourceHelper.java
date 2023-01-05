@@ -11,4 +11,9 @@ public final class ResourceHelper {
             .fromMethodName(ImageController.class, "getImage", fileName).build().toString();
     }
 
+    public static String getUrl(Class controllerClass, String method, Object ...args){
+        return MvcUriComponentsBuilder
+            .fromMethodName(controllerClass, method, args).toUriString();
+    }
+
 }

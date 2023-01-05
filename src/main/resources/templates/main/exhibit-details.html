@@ -1,0 +1,56 @@
+<div th:replace="fragments/header"></div>
+
+<div class="row featurette" th:if="${exhibit.imgUrl != null}">
+  <div class="col-md-7">
+    <h2 class="featurette-heading fw-normal lh-1" th:text="${exhibit.name}"></h2>
+    <span th:each="category, itemStat : *{exhibit.categories}" class="badge text-bg-primary me-1" th:text="${category}"></span>
+    <p class="lead" th:text="${exhibit.description}"></p>
+  </div>
+  <div class="col-md-5">
+     <img th:src="${exhibit.imgUrl}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto">
+  </div>
+</div>
+
+<div class="row featurette" th:if="${exhibit.imgUrl == null}">
+  <div class="col-md-12">
+    <h2 class="featurette-heading fw-normal lh-1" th:text="${exhibit.name}"></h2>
+    <span th:each="category, itemStat : *{exhibit.categories}" class="badge text-bg-primary me-1" th:text="${category}"></span>
+    <p class="lead" th:text="${exhibit.description}"></p>
+  </div>
+</div>
+
+
+<br>
+<hr>
+<div class="mb-3 d-grid gap-2 col-6 mx-auto" th:if="${exhibit.authors.size() > 0}">
+  <a class="btn btn-light" data-bs-toggle="collapse" href="#collapseAuthors" role="button" aria-expanded="false" aria-controls="collapseAuthors">
+    Authors
+  </a>
+</div>
+
+
+
+<div id="collapseAuthors" class="collapse">
+  <div th:each="author, itemStat : *{exhibit.authors}" class="mb-3 row card card-body" >
+    <h2 th:text="${author.author.name}"></h2>
+    <p th:if="${author.author.datesLife != ''}" th:text="'Dates life: ' + ${author.author.datesLife}"></p>
+    <p th:text="${author.author.description}" class="fs-5 "></p>
+  </div>
+</div>
+
+<div class="mb-3 d-grid gap-2 col-6 mx-auto" th:if="${exhibit.authors.size() > 0}">
+  <a class="btn btn-light" data-bs-toggle="collapse" href="#collapseCollections" role="button" aria-expanded="false" aria-controls="collapseCollections">
+    Collections
+  </a>
+</div>
+
+<div id="collapseCollections" class="collapse">
+  <div th:each="author, itemStat : *{exhibit.authors}" class="mb-3 row card card-body" th:if="${author.collection != null}">
+    <h2 th:text="${author.collection.name}"></h2>
+    <p th:text="'Author: ' + ${author.author.name}"></p>
+    <p th:text="${author.collection.description}" class="fs-5 "></p>
+  </div>
+</div>
+
+
+<div th:replace="fragments/footer"></div>

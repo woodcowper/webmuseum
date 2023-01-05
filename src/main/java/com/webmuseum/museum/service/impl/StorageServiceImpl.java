@@ -55,6 +55,7 @@ public class StorageServiceImpl implements IStorageService{
 	public StorageServiceImpl() {
 		this.rootLocationImg = Paths.get(IMG_LOCATION);
 		this.rootLocationQR = Paths.get(QR_LOCATION);
+		init();
 	}
 
 	@Override
@@ -110,14 +111,17 @@ public class StorageServiceImpl implements IStorageService{
 
 	@Override
 	public String storeQR(String text, String name) {
-		String fileName = "QR" + new Date() + name;
+		String fileName = "QR" + new Date() + name + ".png";
 		QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix;
 		try {
 			bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, QR_WIDTH, QR_HEIGHT);
 			MatrixToImageConfig conf = new MatrixToImageConfig( QR_FG_COLOR , QR_BG_COLOR ) ;
 
-			Path destinationFile = FileSystems.getDefault().getPath(QR_LOCATION, fileName);
+			Path destinationFile = this.rootLocationQR.resolve(
+					Paths.get(fileName))
+					.normalize().toAbsolutePath();
+			System.out.println("--------DIRECTORY: " + destinationFile);
 			if (!destinationFile.getParent().equals(this.rootLocationQR.toAbsolutePath())) {
 				throw new RuntimeException(
 						"Cannot store file outside current directory.");
@@ -191,6 +195,9 @@ public class StorageServiceImpl implements IStorageService{
 	}
 
 	private void delete(Path rootLocation, String filename) {
+		if(filename == null || filename.isEmpty()){
+			return;
+		}
 		Path filePath = rootLocation.resolve(filename).normalize().toAbsolutePath();
 		try {
 			Files.delete(filePath);

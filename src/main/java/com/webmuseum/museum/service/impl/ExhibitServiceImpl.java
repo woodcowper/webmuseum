@@ -1,9 +1,6 @@
 package com.webmuseum.museum.service.impl;
 
-import java.io.IOException;
-import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -12,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.exc.StreamWriteException;
-import com.fasterxml.jackson.databind.DatabindException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.webmuseum.museum.controllers.MainController;
 import com.webmuseum.museum.dto.AuthorViewDto;
 import com.webmuseum.museum.dto.CollectionViewDto;
 import com.webmuseum.museum.dto.ExhibitAuthorViewDto;
@@ -74,34 +69,44 @@ public class ExhibitServiceImpl implements IExhibitService {
 
     @Override
     public void deleteExhibit(long id) {
-        Optional<Exhibit> exhibit = getExhibitById(id);
-        if (exhibit.isPresent()) {
-            exhibitRepository.delete(exhibit.get());
+        Optional<Exhibit> optExhibit = getExhibitById(id);
+        if (optExhibit.isPresent()) {
+            Exhibit exhibit = optExhibit.get();
+            storageService.deleteImg(exhibit.getImgFileName());
+            storageService.deleteQR(exhibit.getQrFileName());
+            exhibitRepository.delete(exhibit);
         }
     }
 
     @Override
     public void saveExhibit(Exhibit exhibit) {
-        if(exhibit.getId() == null && exhibit.getAuthors().size() > 0){
-            List<ExhibitAuthor> authors = new ArrayList<ExhibitAuthor>(exhibit.getAuthors());
-            exhibit.getAuthors().clear();
+        if(exhibit.getId() == null){
+            if(exhibit.getAuthors().size() > 0){
+                List<ExhibitAuthor> authors = new ArrayList<ExhibitAuthor>(exhibit.getAuthors());
+                exhibit.getAuthors().clear();
+                exhibitRepository.save(exhibit);
+                authors.stream().forEach(el -> el.setExhibit(exhibit));
+                exhibit.getAuthors().addAll(authors);
+            }
             exhibitRepository.save(exhibit);
-            authors.stream().forEach(el -> el.setExhibit(exhibit));
-            exhibit.getAuthors().addAll(authors);
+            String fileName = storageService.storeQR(ResourceHelper.getUrl(MainController.class, "exhibitDetails", exhibit.getId(), null),  exhibit.getId().toString());
+            System.out.println("---------QR FILE: " + fileName);
+            exhibit.setQrFileName(fileName);
         }
+        
         exhibitRepository.save(exhibit);
     }
 
     @Override
     public void saveExhibit(ExhibitDto exhibit) {
         if(exhibit.getImage() != null && !exhibit.getImage().isEmpty()){
-            String fileName = storageService.store(exhibit.getImage(), "");
+            String fileName = storageService.storeImg(exhibit.getImage(), "");
             exhibit.setImgFileName(fileName);
         } else if(exhibit.getImgFileName().isEmpty()) {
             if(exhibit.getId() != null){
                 Exhibit oldExhibit = getExhibitById(exhibit.getId()).get();
                 if(oldExhibit.getImgFileName() != null && !oldExhibit.getImgFileName().equals(exhibit.getImgFileName())){
-                    storageService.delete(oldExhibit.getImgFileName());
+                    storageService.deleteImg(oldExhibit.getImgFileName());
                 }
             }
             exhibit.setImgFileName(null);
