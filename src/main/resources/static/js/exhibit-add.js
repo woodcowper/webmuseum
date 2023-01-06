@@ -8,6 +8,8 @@ $( document ).ready(function(){
 
     $("#categories").select2();
 
+    $("#roles").select2();
+
     $("#btn-add-author").click(addNewAuthor);
 
     loadFieldsData();

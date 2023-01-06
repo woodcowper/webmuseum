@@ -1,0 +1,30 @@
+<div th:replace="fragments/header-with-sidebar"></div>
+
+
+<div class="container">
+    <h3>Managers: <a th:href="@{/admin/manager-add}" class="btn btn-outline-success">Add</a></h3>
+      <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Data</th>
+            <th scope="col">Controls</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr th:each="manager: ${managers}">
+                <td scope="row" th:text="${manager.id}" />
+                <td th:text="${manager.name}" />
+                <td>
+                    <a href="" class="btn btn-outline-primary">View</a>
+                    <a th:href="@{/admin/manager-edit(id=${manager.id})}" class="btn btn-outline-warning">Edit</a>
+                    <a th:href="@{/admin/manager-delete(id=${manager.id})}" class="btn btn-outline-danger">Delete</a>
+                    <a th:href="@{/admin/manager-gen-and-send-pass(id=${manager.id})}" class="btn btn-info">Generate new password and send to Email</a>
+
+                    
+                </td>
+            </tr>
+      </table>
+</div>
+
+<div th:replace="fragments/footer"></div>

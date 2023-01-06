@@ -1,5 +1,6 @@
 package com.webmuseum.museum.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -9,9 +10,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import com.webmuseum.museum.service.impl.UserDetailsServiceImpl;
+
 @Configuration
 @EnableWebSecurity
 public class SpringSecurity {
+
+    @Autowired
+    private UserDetailsServiceImpl userDetailsService;
 
     @Bean
     public static PasswordEncoder passwordEncoder(){
@@ -26,16 +32,18 @@ public class SpringSecurity {
                 .requestMatchers("/ajax/**").permitAll()
                 .requestMatchers("/main/**").permitAll()
                 .requestMatchers("/image/**").permitAll()
-                .requestMatchers("/admin/**").permitAll()
+                //.requestMatchers("/manager/**").permitAll()
                 .requestMatchers("/auth/register/**").permitAll()
                 .requestMatchers("/auth/index").permitAll()
-                .requestMatchers("/auth/users").hasRole("ADMIN")
+                .requestMatchers("/auth/users", "/manager/**").hasRole("MANAGER")
+                .requestMatchers("/auth/users", "/manager/**", "/admin/**").hasRole("ADMIN")
                 .and()
+                .userDetailsService(userDetailsService)
                 .formLogin(
                         form -> form
                                 .loginPage("/auth/login")
                                 .loginProcessingUrl("/auth/login")
-                                .defaultSuccessUrl("/auth/users")
+                                .defaultSuccessUrl("/manager/", true)
                                 .permitAll()
                 ).logout(
                         logout -> logout
