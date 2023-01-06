@@ -28,7 +28,7 @@ public interface IStorageService {
 
 	Path loadQR(String filename);
 
-	Resource loadAsResourceQR(String filename);
+	Resource loadQRAsResource(String filename);
 
 	void deleteAllQR();
 
