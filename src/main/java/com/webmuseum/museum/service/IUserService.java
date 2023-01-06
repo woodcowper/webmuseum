@@ -1,12 +1,17 @@
 package com.webmuseum.museum.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.webmuseum.museum.dto.UserDto;
 import com.webmuseum.museum.entity.User;
 
 public interface IUserService {
     void saveUser(UserDto userDto);
+
+    Optional<User> findUserById(Long id);
+
+    UserDto getUserDtoById(long id);
 
     User findUserByEmail(String email);
 
@@ -21,6 +26,12 @@ public interface IUserService {
     UserDto createEmptyUserDtoForClient();
 
     UserDto createEmptyUserDtoForManager();
+
+    String generatePassword();
+
+    boolean setNewPassword(long id, String password);
+
+    boolean checkIfExistsOthers(Long userId, String email);
 
 
 }

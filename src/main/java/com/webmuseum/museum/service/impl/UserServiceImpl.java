@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,17 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    @Override
+    public Optional<User> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    
+    @Override
+    public UserDto getUserDtoById(long id) {
+        User user = userRepository.findById(id).get();
+        return mapToUserDto(user);
+    }
 
     @Override
     public User findUserByEmail(String email) {
@@ -84,8 +96,37 @@ public class UserServiceImpl implements IUserService {
         return userDto;
     }
 
+    @Override
+    public String generatePassword(){
+        RandomStringGenerator pwdGenerator = new RandomStringGenerator.Builder().withinRange(33, 45)
+        .build();
+        return pwdGenerator.generate(12);
+    }
+
+    @Override
+    public boolean setNewPassword(long id, String password){
+        Optional<User> optUser = findUserById(id);
+        if(optUser.isPresent()){
+            User user = optUser.get();
+            user.setPassword(passwordEncoder.encode(password));
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public boolean checkIfExistsOthers(Long userId, String email) {
+        return findAllUsers().stream()
+                .filter((user) -> user.getEmail().equals(email)
+                                        && user.getId() != userId)
+                .findAny()
+                .isPresent();
+    }
+
     private UserDto mapToUserDto(User user){
         UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
         userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setRoles(roleService.getRolesIds(user.getRoles()));
