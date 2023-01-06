@@ -62,13 +62,13 @@ public class EventServiceImpl implements IEventService {
     @Override
     public void saveEvent(EventDto event) {
         if(event.getImage() != null && !event.getImage().isEmpty()){
-            String fileName = storageService.store(event.getImage(), "");
+            String fileName = storageService.storeImg(event.getImage(), "event");
             event.setImgFileName(fileName);
         } else if(event.getImgFileName().isEmpty()) {
             if(event.getId() != null){
                 Event oldEvent = getEventById(event.getId()).get();
                 if(oldEvent.getImgFileName() != null && !oldEvent.getImgFileName().equals(event.getImgFileName())){
-                    storageService.delete(oldEvent.getImgFileName());
+                    storageService.deleteImg(oldEvent.getImgFileName());
                 }
             }
             event.setImgFileName(null);
