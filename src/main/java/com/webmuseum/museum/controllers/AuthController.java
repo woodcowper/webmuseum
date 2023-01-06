@@ -70,14 +70,6 @@ public class AuthController {
         return "redirect:/" + CONTROLLER_VIEW_DIR + "register?success";
     }
 
-    @GetMapping("/users")
-    public String users(Model model){
-        List<UserDto> users = userService.findAllUsers();
-        model.addAttribute("users", users);
-        model.addAttribute("cur_user", ((UserDetails)SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername());
-        return CONTROLLER_VIEW_DIR + "users";
-    }
-
     @GetMapping("/login")
     public String loginForm(){
         return CONTROLLER_VIEW_DIR + "login";
