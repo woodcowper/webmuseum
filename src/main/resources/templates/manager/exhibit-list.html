@@ -1,4 +1,4 @@
-<div th:replace="fragments/header"></div>
+<div th:replace="fragments/header-with-sidebar"></div>
 
 
 <div class="container">
@@ -16,7 +16,8 @@
                 <td scope="row" th:text="${exhibit.id}" />
                 <td th:text="${exhibit.name}" />
                 <td>
-                    <a href="" class="btn btn-outline-primary">View</a>
+                    <a th:href="@{/main/exhibit-details(exhibitId=${exhibit.id})}" class="btn btn-outline-primary">View</a>
+                    <a th:href="${exhibit.qrUrl}" class="btn btn-outline-primary">View QR </a>
                     <a th:href="@{/manager/exhibit-edit(id=${exhibit.id})}" class="btn btn-outline-warning">Edit</a>
                     <a th:href="@{/manager/exhibit-delete(id=${exhibit.id})}" class="btn btn-outline-danger">Delete</a>
                 </td>

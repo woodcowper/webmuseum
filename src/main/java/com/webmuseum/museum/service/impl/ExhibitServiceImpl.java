@@ -1,5 +1,6 @@
 package com.webmuseum.museum.service.impl;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -90,7 +91,6 @@ public class ExhibitServiceImpl implements IExhibitService {
             }
             exhibitRepository.save(exhibit);
             String fileName = storageService.storeQR(ResourceHelper.getUrl(MainController.class, "exhibitDetails", exhibit.getId(), null),  exhibit.getId().toString());
-            System.out.println("---------QR FILE: " + fileName);
             exhibit.setQrFileName(fileName);
         }
         
@@ -182,6 +182,7 @@ public class ExhibitServiceImpl implements IExhibitService {
         if(exhibit.getImgFileName() != null){
             exhibitDto.setImgUrl(ResourceHelper.getImgUrl(exhibit.getImgFileName()));
         }
+        exhibitDto.setQrUrl(ResourceHelper.getQRUrl(exhibit.getQrFileName()));
         return exhibitDto;
     }
 

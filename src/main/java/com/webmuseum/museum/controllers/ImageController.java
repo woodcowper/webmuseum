@@ -26,5 +26,14 @@ public class ImageController {
       return ResponseEntity.ok()
           .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
+
+    @GetMapping("/qr/{filename:.+}")
+    public ResponseEntity<Resource> getQR(@PathVariable String filename) {
+    System.out.println("-------RES FILE :" + filename);
+      Resource file = storageService.loadQRAsResource(filename);
+  
+      return ResponseEntity.ok()
+          .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
     
 }
