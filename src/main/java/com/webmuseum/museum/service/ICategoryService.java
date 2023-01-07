@@ -19,6 +19,8 @@ public interface ICategoryService {
 
     Optional<Category> getCategoryById(long id);
 
+    CategoryDto getCategoryDtoById(long id, long languageId);
+
     CategoryDto getCategoryDtoById(long id);
 
     String getCategoryTypeNameById(long id);
@@ -33,6 +35,6 @@ public interface ICategoryService {
 
     void saveCategory(CategoryDto categoryDto);
 
-    boolean checkIfExistsOthers(Long categoryId, String name, ECategoryType type);
+    boolean checkIfExistsOthers(Long categoryId, String name, ECategoryType type, long languageId);
     
 }

@@ -10,6 +10,8 @@ public interface ILanguageService {
 
     List<LanguageDto> findAllLanguages();
 
+    List<LanguageDto> findAllLanguagesWithoutId(long id);
+
     Optional<Language> getLanguageById(long id);
 
     LanguageDto getLanguageDtoById(long id);

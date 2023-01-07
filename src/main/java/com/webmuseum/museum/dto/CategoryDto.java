@@ -1,6 +1,7 @@
 package com.webmuseum.museum.dto;
 
 import com.webmuseum.museum.models.ECategoryType;
+import com.webmuseum.museum.utils.LanguageHelper;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -23,11 +24,15 @@ public class CategoryDto {
     @NotNull
     private ECategoryType type;
 
-    public CategoryDto(ECategoryType type) {
+    private Long languageId;
+
+    public CategoryDto(ECategoryType type, long languageId) {
         this.type = type;
+        this.languageId = languageId;
     }
 
     public CategoryDto() {
         this.type = ECategoryType.EVENT;
+        this.languageId = LanguageHelper.DEFAULS_LANGUAGE_ID;
     }
 }

@@ -29,6 +29,16 @@ public class LanguageServiceImpl implements ILanguageService{
     }
 
     @Override
+    public List<LanguageDto> findAllLanguagesWithoutId(long id) {
+        List<Language> languages = languageRepository.findAll();
+        return languages.stream()
+                .filter((lang) -> lang.getId() != id)
+                .sorted((language1, language2) -> language1.getName().compareTo(language2.getName()))
+                .map((language) -> mapToLanguageDto(language))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public Optional<Language> getLanguageById(long id) {
         return languageRepository.findById(id);
     }

@@ -17,6 +17,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,9 +34,6 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private String name;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category_type", nullable = false)
@@ -54,5 +52,9 @@ public class Category {
             inverseJoinColumns = { @JoinColumn(name = "user_id", referencedColumnName = "id") }
     )
     private List<User> subscribers = new ArrayList<>();
+
+
+    @OneToMany(targetEntity=CategoryDescription.class, mappedBy="category", cascade = CascadeType.ALL)
+    private List<CategoryDescription> descriptions = new ArrayList<>();
 
 }

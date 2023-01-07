@@ -27,7 +27,10 @@ import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.ICollectionService;
 import com.webmuseum.museum.service.IEventService;
 import com.webmuseum.museum.service.IExhibitService;
+import com.webmuseum.museum.service.ILanguageService;
 import com.webmuseum.museum.utils.DateHelper;
+import com.webmuseum.museum.utils.LanguageHelper;
+
 import jakarta.validation.Valid;
 
 @Controller
@@ -49,6 +52,9 @@ public class ManagerController {
 
     @Autowired
     private IEventService eventService;
+
+    @Autowired
+    private ILanguageService languageService;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -116,6 +122,7 @@ public class ManagerController {
     public String categoryEventList(Model model) {
         model.addAttribute("categories", categoryService.findAllEventCategories());
         model.addAttribute("type", "event");
+        model.addAttribute("languages", languageService.findAllLanguagesWithoutId(LanguageHelper.DEFAULS_LANGUAGE_ID));
         return CONTROLLER_VIEW_DIR + "category-list";
     }
 
@@ -131,6 +138,7 @@ public class ManagerController {
     public String categoryExhibitList(Model model) {
         model.addAttribute("categories", categoryService.findAllExhibitCategories());
         model.addAttribute("type", "exhibit");
+        model.addAttribute("languages", languageService.findAllLanguagesWithoutId(LanguageHelper.DEFAULS_LANGUAGE_ID));
         return CONTROLLER_VIEW_DIR + "category-list";
     }
 
@@ -142,7 +150,11 @@ public class ManagerController {
 
     /* Category */
     private String categoryAdd(Model model, ECategoryType type) {
-        model.addAttribute("category", new CategoryDto(type));
+        return categoryAdd(model, type, LanguageHelper.DEFAULS_LANGUAGE_ID);
+    }
+
+    private String categoryAdd(Model model, ECategoryType type, long languageId) {
+        model.addAttribute("category", new CategoryDto(type, languageId));
         model.addAttribute("type", type.name());
         return CONTROLLER_VIEW_DIR + "category-add";
     }
@@ -155,9 +167,18 @@ public class ManagerController {
         return CONTROLLER_VIEW_DIR + "category-add";
     }
 
+    @GetMapping("/category-translation")
+    public String categoryTranslation(@RequestParam long categoryId, @RequestParam long languageId, Model model) {
+        CategoryDto category = categoryService.getCategoryDtoById(categoryId, languageId);
+        model.addAttribute("category", category);
+        model.addAttribute("type", categoryService.getFormattedCategoryTypeName(category));
+        model.addAttribute("isTranslations", true);
+        return CONTROLLER_VIEW_DIR + "category-add";
+    }
+
     @PostMapping("/category-save")
     public String categorySave(@Valid @ModelAttribute("category") CategoryDto category, BindingResult result, Model model) {
-        if(categoryService.checkIfExistsOthers(category.getId(), category.getName(), category.getType())){
+        if(categoryService.checkIfExistsOthers(category.getId(), category.getName(), category.getType(), category.getLanguageId())){
             result.rejectValue("name", null,
                     "There is already category for " + categoryService.getFormattedCategoryTypeName(category) +  " added with the same name");
         }

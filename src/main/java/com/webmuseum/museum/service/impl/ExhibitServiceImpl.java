@@ -138,7 +138,7 @@ public class ExhibitServiceImpl implements IExhibitService {
             exhibitViewDto.setImgUrl(ResourceHelper.getImgUrl(exhibit.getImgFileName()));
         }
         // categories info
-        exhibitViewDto.setCategories(exhibit.getCategories().stream().map((category) -> category.getName()).toList());
+       // exhibitViewDto.setCategories(exhibit.getCategories().stream().map((category) -> category.getName()).toList());
         // exhibitAuthor info
         List<ExhibitAuthorViewDto> authors = new ArrayList<>();
         for(ExhibitAuthor authorExhibit : exhibit.getAuthors()){
