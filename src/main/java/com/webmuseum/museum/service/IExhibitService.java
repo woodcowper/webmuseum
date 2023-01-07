@@ -25,4 +25,7 @@ public interface IExhibitService {
     boolean checkIfExistsOthers(Long exhibitId, String name, Long authorId);
 
     ExhibitViewDto getExhibitViewDto(Long exhibitId);
+
+    ExhibitViewDto getExhibitViewDto(Long exhibitId, Long languageId);
+
 }

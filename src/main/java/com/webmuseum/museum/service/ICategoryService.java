@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.webmuseum.museum.dto.CategoryDto;
 import com.webmuseum.museum.entity.Category;
+import com.webmuseum.museum.entity.CategoryDescription;
 import com.webmuseum.museum.models.ECategoryType;
 
 public interface ICategoryService {
@@ -36,5 +37,7 @@ public interface ICategoryService {
     void saveCategory(CategoryDto categoryDto);
 
     boolean checkIfExistsOthers(Long categoryId, String name, ECategoryType type, long languageId);
+
+    CategoryDescription getDescription(Category category, long languageId);
     
 }

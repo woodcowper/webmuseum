@@ -11,7 +11,6 @@ import com.webmuseum.museum.dto.CategoryDto;
 import com.webmuseum.museum.entity.Category;
 import com.webmuseum.museum.entity.CategoryDescription;
 import com.webmuseum.museum.models.ECategoryType;
-import com.webmuseum.museum.repository.CategoryDescriptionRepository;
 import com.webmuseum.museum.repository.CategoryRepository;
 import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.ILanguageService;
@@ -25,9 +24,6 @@ public class CategoryServiceImpl implements ICategoryService {
 
     @Autowired
     private ILanguageService languageService;
-
-    @Autowired
-    private CategoryDescriptionRepository categoryDescriptionRepository;
 
     @Override
     public List<Category> findAllEventCategoriesWithIds(List<Long> ids){
@@ -164,7 +160,8 @@ public class CategoryServiceImpl implements ICategoryService {
             .toList();
     }
 
-    private CategoryDescription getDescription(Category category, long languageId) {
+    @Override
+    public CategoryDescription getDescription(Category category, long languageId) {
         Optional<CategoryDescription> description = category.getDescriptions().stream()
                 .filter((desc) -> desc.getLanguage().getId() == languageId)
                 .findFirst();

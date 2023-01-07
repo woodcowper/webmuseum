@@ -15,6 +15,7 @@ import com.webmuseum.museum.dto.CollectionViewDto;
 import com.webmuseum.museum.dto.ExhibitAuthorViewDto;
 import com.webmuseum.museum.dto.ExhibitDto;
 import com.webmuseum.museum.dto.ExhibitViewDto;
+import com.webmuseum.museum.entity.CategoryDescription;
 import com.webmuseum.museum.entity.Exhibit;
 import com.webmuseum.museum.entity.ExhibitAuthor;
 import com.webmuseum.museum.repository.ExhibitRepository;
@@ -23,6 +24,7 @@ import com.webmuseum.museum.service.IExhibitAuthorService;
 import com.webmuseum.museum.service.IExhibitService;
 import com.webmuseum.museum.service.IStorageService;
 import com.webmuseum.museum.utils.DateHelper;
+import com.webmuseum.museum.utils.LanguageHelper;
 import com.webmuseum.museum.utils.ResourceHelper;
 
 @Service
@@ -124,6 +126,11 @@ public class ExhibitServiceImpl implements IExhibitService {
 
     @Override
     public ExhibitViewDto getExhibitViewDto(Long exhibitId){
+        return getExhibitViewDto(exhibitId, LanguageHelper.DEFAULS_LANGUAGE_ID);
+    }
+
+    @Override
+    public ExhibitViewDto getExhibitViewDto(Long exhibitId, Long languageId){
         Optional<Exhibit> exhibitOpt = getExhibitById(exhibitId);
 		if(!exhibitOpt.isPresent()){
 			// return error
@@ -137,7 +144,7 @@ public class ExhibitServiceImpl implements IExhibitService {
             exhibitViewDto.setImgUrl(ResourceHelper.getImgUrl(exhibit.getImgFileName()));
         }
         // categories info
-       // exhibitViewDto.setCategories(exhibit.getCategories().stream().map((category) -> category.getName()).toList());
+        exhibitViewDto.setCategories(exhibit.getCategories().stream().map((category) -> categoryService.getDescription(category, languageId).getName()).toList());
         // exhibitAuthor info
         List<ExhibitAuthorViewDto> authors = new ArrayList<>();
         for(ExhibitAuthor authorExhibit : exhibit.getAuthors()){
