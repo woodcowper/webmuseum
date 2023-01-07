@@ -72,6 +72,7 @@ public class ManagerController {
     @GetMapping("/author-list")
     public String authorList(Model model) {
         model.addAttribute("authors", authorService.findAllAuthors());
+        model.addAttribute("languages", languageService.findAllLanguagesWithoutId(LanguageHelper.DEFAULS_LANGUAGE_ID));
         return CONTROLLER_VIEW_DIR + "author-list";
     }
 
@@ -84,7 +85,7 @@ public class ManagerController {
 
     @GetMapping("/author-edit")
     public String authorEdit(@RequestParam long id, Model model) {
-        AuthorDto author = authorService.getAuthorDtoById(id);
+        AuthorDto author = authorService.getAuthorDtoById(id, LanguageHelper.DEFAULS_LANGUAGE_ID);
         model.addAttribute("author", author);
         return CONTROLLER_VIEW_DIR + "author-add";
     }
@@ -101,11 +102,20 @@ public class ManagerController {
 
         if (result.hasErrors()) {
             model.addAttribute("author", author);
+            model.addAttribute("isTranslations", author.getLanguageId() != LanguageHelper.DEFAULS_LANGUAGE_ID);
             return CONTROLLER_VIEW_DIR + "author-add";
         }
 
         authorService.saveAuthor(author);
         return "redirect:/" + CONTROLLER_VIEW_DIR + "author-list";
+    }
+
+    @GetMapping("/author-translation")
+    public String authorTranslation(@RequestParam long authorId, @RequestParam long languageId, Model model) {
+        AuthorDto author = authorService.getAuthorDtoById(authorId, languageId);
+        model.addAttribute("author", author);
+        model.addAttribute("isTranslations", true);
+        return CONTROLLER_VIEW_DIR + "author-add";
     }
 
     @GetMapping("/author-delete")
@@ -234,7 +244,7 @@ public class ManagerController {
         Author author = authorService.getAuthorById(collection.getAuthorId()).get();
         if(collectionService.checkIfExistsOthers(collection.getId(), collection.getName(), collection.getAuthorId(), collection.getLanguageId())){
             result.rejectValue("name", null,
-                    "There is already collection for " + author.getName() +  " added with the same name");
+                    "There is already collection for " + authorService.getDescription(author, LanguageHelper.DEFAULS_LANGUAGE_ID) +  " added with the same name");
         }
 
         if (result.hasErrors()) {
@@ -301,9 +311,9 @@ public class ManagerController {
         exhibit.clearEmptyAuthors();
         for(ExhibitAuthorDto exhibitAthor: exhibit.getAuthors()){
             if(exhibitService.checkIfExistsOthers(exhibit.getId(), exhibit.getName(), exhibitAthor.getAuthorId())){
-                String authorName = authorService.getAuthorById(exhibitAthor.getAuthorId()).get().getName();
+                Author author = authorService.getAuthorById(exhibitAthor.getAuthorId()).get();
                 result.rejectValue("name", null,
-                    "There is already exhibit for " + authorName +  " added with the same name");
+                    "There is already exhibit for " + authorService.getDescription(author, LanguageHelper.DEFAULS_LANGUAGE_ID).getName() +  " added with the same name");
                 break;
             }
         }

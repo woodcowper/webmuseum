@@ -15,6 +15,25 @@
           type="hidden"
       />
 
+      <input
+          name="languageId"
+          th:field="*{languageId}"
+          type="hidden"
+      />
+
+      <div th:if="${isTranslations}">
+        <input
+            name="birthDate"
+            th:field="*{birthDate}"
+            type="hidden"
+        />
+        <input
+            name="dieDate"
+            th:field="*{dieDate}"
+            type="hidden"
+        />
+      </div>
+
       <div class="mb-3">
         <label class="form-label">Full Name</label>
         <input
@@ -43,8 +62,7 @@
         <div th:errors = "*{description}" class="text-danger"
            th:if="${#fields.hasErrors('description')}"></div>
       </div>
-
-      <div class="mb-3">
+      <div class="mb-3" th:if="!${isTranslations}">
         <label class="form-label">Life dates</label>
         <div class="row">
           <div class="col-5">

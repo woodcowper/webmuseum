@@ -15,11 +15,13 @@ import com.webmuseum.museum.dto.CollectionViewDto;
 import com.webmuseum.museum.dto.ExhibitAuthorViewDto;
 import com.webmuseum.museum.dto.ExhibitDto;
 import com.webmuseum.museum.dto.ExhibitViewDto;
+import com.webmuseum.museum.entity.AuthorDescription;
 import com.webmuseum.museum.entity.CategoryDescription;
 import com.webmuseum.museum.entity.CollectionDescription;
 import com.webmuseum.museum.entity.Exhibit;
 import com.webmuseum.museum.entity.ExhibitAuthor;
 import com.webmuseum.museum.repository.ExhibitRepository;
+import com.webmuseum.museum.service.IAuthorService;
 import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.ICollectionService;
 import com.webmuseum.museum.service.IExhibitAuthorService;
@@ -47,6 +49,9 @@ public class ExhibitServiceImpl implements IExhibitService {
 
     @Autowired 
     private ICollectionService collectionService;
+
+    @Autowired 
+    private IAuthorService authorService;
 
     @Override
     public List<ExhibitDto> findAllExhibits(){
@@ -173,8 +178,11 @@ public class ExhibitServiceImpl implements IExhibitService {
             }
             // author info
             AuthorViewDto authorViewDto = new AuthorViewDto();
-            authorViewDto.setName(authorExhibit.getAuthor().getName());
-            authorViewDto.setDescription(authorExhibit.getAuthor().getDescription());
+            AuthorDescription authorDescription = authorService.getDescription(authorExhibit.getAuthor(), languageId);
+            if(authorDescription != null){
+                authorViewDto.setName(authorDescription.getName());
+                authorViewDto.setDescription(authorDescription.getDescription());
+            }
             String datesLife = "";
             if(authorExhibit.getAuthor().getBirthDate() != null){
                 datesLife += DateHelper.parseDateToStr(authorExhibit.getAuthor().getBirthDate());

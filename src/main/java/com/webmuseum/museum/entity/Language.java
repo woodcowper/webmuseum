@@ -34,4 +34,7 @@ public class Language {
 
     @OneToMany(targetEntity=CollectionDescription.class, mappedBy="language")
     private List<CollectionDescription> collectionDescriptions = new ArrayList<>();
+
+    @OneToMany(targetEntity=AuthorDescription.class, mappedBy="language")
+    private List<AuthorDescription> authorDescriptions = new ArrayList<>();
 }

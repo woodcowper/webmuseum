@@ -18,23 +18,10 @@ import java.util.List;
 @Entity
 @Table(name = "authors")
 public class Author {
-    
-    public Author(String name, String description, Date birthDate, Date dieDate) {
-        this.name = name;
-        this.description = description;
-        this.birthDate = birthDate;
-        this.dieDate = dieDate;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false)
-    private String name;
-
-    @Column(nullable = true, length = 1000)
-    private String description;
 
     @Column(nullable = true)
     private Date birthDate;
@@ -52,4 +39,7 @@ public class Author {
 
     @OneToMany(targetEntity=Collection.class, mappedBy="author")
     private List<Collection> collections = new ArrayList<>();
+
+    @OneToMany(targetEntity=AuthorDescription.class, mappedBy="author", cascade = CascadeType.ALL)
+    private List<AuthorDescription> descriptions = new ArrayList<>();
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.webmuseum.museum.dto.ExhibitAuthorDto;
+import com.webmuseum.museum.entity.AuthorDescription;
 import com.webmuseum.museum.entity.ExhibitAuthor;
 import com.webmuseum.museum.entity.ExhibitAuthorId;
 import com.webmuseum.museum.repository.ExhibitAuthorRepository;
@@ -15,6 +16,7 @@ import com.webmuseum.museum.service.IAuthorService;
 import com.webmuseum.museum.service.ICollectionService;
 import com.webmuseum.museum.service.IExhibitAuthorService;
 import com.webmuseum.museum.service.IExhibitService;
+import com.webmuseum.museum.utils.LanguageHelper;
 
 @Service
 public class ExhibitAuthorServiceImpl implements IExhibitAuthorService{
@@ -45,7 +47,11 @@ public class ExhibitAuthorServiceImpl implements IExhibitAuthorService{
         List<ExhibitAuthor> exhibitAuthors = exhibitAuthorRepository.findAll();
         return exhibitAuthors.stream()
                 .filter((exhibitAuthor) -> exhibitAuthor.getExhibit().getId() == id)
-                .sorted((exhibitAuthor1, exhibitAuthor2) -> exhibitAuthor1.getAuthor().getName().compareTo(exhibitAuthor1.getAuthor().getName()))
+                .sorted((exhibitAuthor1, exhibitAuthor2) -> {
+                    AuthorDescription authorDesc1 = authorService.getDescription(exhibitAuthor1.getAuthor(), LanguageHelper.DEFAULS_LANGUAGE_ID);
+                    AuthorDescription authorDesc2 = authorService.getDescription(exhibitAuthor1.getAuthor(), LanguageHelper.DEFAULS_LANGUAGE_ID);
+                    return authorDesc1.getName().compareTo(authorDesc2.getName());
+                })
                 .collect(Collectors.toList());
     }
 
