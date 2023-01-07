@@ -1,9 +1,6 @@
 package com.webmuseum.museum.models;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Objects;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -21,7 +18,6 @@ public class AppUserPrincipal implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return user.getRoles().stream().map(el -> new SimpleGrantedAuthority(el.getName())).toList();
-        // return Collections.<GrantedAuthority>singletonList(new SimpleGrantedAuthority("ADMIN"));
     }
 
     @Override

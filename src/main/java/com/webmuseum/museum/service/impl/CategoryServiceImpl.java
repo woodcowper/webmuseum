@@ -1,13 +1,12 @@
 package com.webmuseum.museum.service.impl;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.google.gson.Gson;
 import com.webmuseum.museum.dto.CategoryDto;
 import com.webmuseum.museum.entity.Category;
 import com.webmuseum.museum.entity.CategoryDescription;

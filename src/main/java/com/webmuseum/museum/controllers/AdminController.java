@@ -1,7 +1,5 @@
 package com.webmuseum.museum.controllers;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,13 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.webmuseum.museum.dto.UserDto;
-import com.webmuseum.museum.dto.UserDto;
 import com.webmuseum.museum.entity.User;
 import com.webmuseum.museum.models.EmailDetails;
 import com.webmuseum.museum.service.IEmailService;
 import com.webmuseum.museum.service.IRoleService;
 import com.webmuseum.museum.service.IUserService;
-import com.webmuseum.museum.utils.DateHelper;
 import com.webmuseum.museum.utils.EmailHelper;
 
 import jakarta.validation.Valid;

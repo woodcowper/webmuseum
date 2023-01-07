@@ -1,7 +1,6 @@
 package com.webmuseum.museum.service.impl;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 import com.webmuseum.museum.dto.UserDto;
 import com.webmuseum.museum.entity.Role;
 import com.webmuseum.museum.entity.User;
-import com.webmuseum.museum.repository.RoleRepository;
 import com.webmuseum.museum.repository.UserRepository;
 import com.webmuseum.museum.service.IRoleService;
 import com.webmuseum.museum.service.IUserService;
