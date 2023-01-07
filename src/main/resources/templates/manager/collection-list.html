@@ -19,6 +19,14 @@
                     <a href="" class="btn btn-outline-primary">View</a>
                     <a th:href="@{/manager/collection-edit(id=${collection.id})}" class="btn btn-outline-warning">Edit</a>
                     <a th:href="@{/manager/collection-delete(id=${collection.id})}" class="btn btn-outline-danger">Delete</a>
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Translations
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li th:each="language: ${languages}">
+                        <a class="dropdown-item" th:href="@{/manager/collection-translation(collectionId=${collection.id}, languageId=${language.id})}" th:text="${language.name}"></a>
+                      </li>
+                    </ul>
                 </td>
             </tr>
       </table>

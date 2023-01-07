@@ -5,14 +5,17 @@ import java.util.Optional;
 
 import com.webmuseum.museum.dto.CollectionDto;
 import com.webmuseum.museum.entity.Collection;
+import com.webmuseum.museum.entity.CollectionDescription;
 
 public interface ICollectionService {
 
     List<CollectionDto> findAllCollectionsForAuthor(long id);
 
+    List<CollectionDto> findAllCollectionsForAuthor(long id, long languageId);
+
     Optional<Collection> getCollectionById(long id);
 
-    CollectionDto getCollectionDtoById(long id);
+    CollectionDto getCollectionDtoById(long id, long languageId);
 
     void deleteCollection(long id);
 
@@ -20,6 +23,8 @@ public interface ICollectionService {
 
     void saveCollection(CollectionDto collection);
 
-    boolean checkIfExistsOthers(Long collectionId, String name, long authorId);
+    boolean checkIfExistsOthers(Long collectionId, String name, long authorId, long languageId);
+
+    CollectionDescription getDescription(Collection collection, long languageId);
 }
 

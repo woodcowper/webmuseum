@@ -1,15 +1,15 @@
 package com.webmuseum.museum.dto;
 
+import com.webmuseum.museum.utils.LanguageHelper;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class CollectionDto {
 
@@ -23,5 +23,11 @@ public class CollectionDto {
     private String description;
 
     private Long authorId;
+
+    private Long languageId;
+
+    public CollectionDto() {
+        this.languageId = LanguageHelper.DEFAULS_LANGUAGE_ID;
+    }
     
 }

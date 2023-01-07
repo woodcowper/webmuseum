@@ -16,10 +16,12 @@ import com.webmuseum.museum.dto.ExhibitAuthorViewDto;
 import com.webmuseum.museum.dto.ExhibitDto;
 import com.webmuseum.museum.dto.ExhibitViewDto;
 import com.webmuseum.museum.entity.CategoryDescription;
+import com.webmuseum.museum.entity.CollectionDescription;
 import com.webmuseum.museum.entity.Exhibit;
 import com.webmuseum.museum.entity.ExhibitAuthor;
 import com.webmuseum.museum.repository.ExhibitRepository;
 import com.webmuseum.museum.service.ICategoryService;
+import com.webmuseum.museum.service.ICollectionService;
 import com.webmuseum.museum.service.IExhibitAuthorService;
 import com.webmuseum.museum.service.IExhibitService;
 import com.webmuseum.museum.service.IStorageService;
@@ -40,9 +42,11 @@ public class ExhibitServiceImpl implements IExhibitService {
     @Autowired 
     private ICategoryService categoryService;
 
-
     @Autowired
     private IStorageService storageService;
+
+    @Autowired 
+    private ICollectionService collectionService;
 
     @Override
     public List<ExhibitDto> findAllExhibits(){
@@ -151,7 +155,8 @@ public class ExhibitServiceImpl implements IExhibitService {
             ExhibitAuthorViewDto exhibitAuthorViewDto = new ExhibitAuthorViewDto();
             // collection info
             if(authorExhibit.getCollection() != null){
-                exhibitAuthorViewDto.setCollection(new CollectionViewDto(authorExhibit.getCollection().getName(), authorExhibit.getCollection().getDescription()));
+                CollectionDescription collectionDescription = collectionService.getDescription(authorExhibit.getCollection(), languageId);
+                exhibitAuthorViewDto.setCollection(new CollectionViewDto(collectionDescription.getName(), collectionDescription.getDescription()));
             }
             // author info
             AuthorViewDto authorViewDto = new AuthorViewDto();

@@ -209,12 +209,14 @@ public class ManagerController {
     public String collectionList(@RequestParam(name="authorId", required=true) long authorId, Model model) {
         model.addAttribute("collections", collectionService.findAllCollectionsForAuthor(authorId));
         model.addAttribute("authorId", authorId);
+        model.addAttribute("languages", languageService.findAllLanguagesWithoutId(LanguageHelper.DEFAULS_LANGUAGE_ID));
         return CONTROLLER_VIEW_DIR + "collection-list";
     }
 
     @GetMapping("/collection-add")
     private String collectionAdd(@RequestParam(name="authorId", required=true) long authorId, Model model) {
         CollectionDto collection = new CollectionDto();
+        collection.setLanguageId(LanguageHelper.DEFAULS_LANGUAGE_ID);
         collection.setAuthorId(authorId);
         model.addAttribute("collection", collection);
         return CONTROLLER_VIEW_DIR + "collection-add";
@@ -222,7 +224,7 @@ public class ManagerController {
 
     @GetMapping("/collection-edit")
     public String collectionEdit(@RequestParam long id, Model model) {
-        CollectionDto collection = collectionService.getCollectionDtoById(id);
+        CollectionDto collection = collectionService.getCollectionDtoById(id, LanguageHelper.DEFAULS_LANGUAGE_ID);
         model.addAttribute("collection", collection);
         return CONTROLLER_VIEW_DIR + "collection-add";
     }
@@ -230,7 +232,7 @@ public class ManagerController {
     @PostMapping("/collection-save")
     public String collectionSave(@Valid @ModelAttribute("collection") CollectionDto collection, BindingResult result, Model model) {
         Author author = authorService.getAuthorById(collection.getAuthorId()).get();
-        if(collectionService.checkIfExistsOthers(collection.getId(), collection.getName(), collection.getAuthorId())){
+        if(collectionService.checkIfExistsOthers(collection.getId(), collection.getName(), collection.getAuthorId(), collection.getLanguageId())){
             result.rejectValue("name", null,
                     "There is already collection for " + author.getName() +  " added with the same name");
         }
@@ -242,6 +244,14 @@ public class ManagerController {
         
         collectionService.saveCollection(collection);
         return "redirect:/" + CONTROLLER_VIEW_DIR + "collection-list?authorId=" + collection.getAuthorId();
+    }
+
+    @GetMapping("/collection-translation")
+    public String collectionTranslation(@RequestParam long collectionId, @RequestParam long languageId, Model model) {
+        CollectionDto collection = collectionService.getCollectionDtoById(collectionId, languageId);
+        model.addAttribute("collection", collection);
+        model.addAttribute("isTranslations", true);
+        return CONTROLLER_VIEW_DIR + "collection-add";
     }
 
     @GetMapping("/collection-delete")
