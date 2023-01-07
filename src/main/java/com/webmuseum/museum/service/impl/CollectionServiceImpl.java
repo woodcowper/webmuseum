@@ -37,8 +37,8 @@ public class CollectionServiceImpl implements ICollectionService{
     public List<CollectionDto> findAllCollectionsForAuthor(long id, long languageId) {
         List<Collection> collections = authorRepository.findById(id).get().getCollections();
         return collections.stream()
-                .sorted((collection1, collection2) -> getName(collection1, languageId).compareTo(getName(collection2, languageId)))
                 .map((collection) -> mapToCollectionDto(collection, languageId))
+                .sorted((collection1, collection2) -> collection1.getName().compareTo(collection2.getName()))
                 .collect(Collectors.toList());
     }
 
