@@ -147,6 +147,7 @@ public class CategoryServiceImpl implements ICategoryService {
     private List<CategoryDto> findAllCategoriesDtoByType(ECategoryType type, long languageId) {
         return findAllCategoriesByType(type).stream()
                 .map((category) -> mapToCategoryDto(category, languageId))
+                .sorted((category1, category2) -> category1.getName().compareTo(category2.getName()))
                 .collect(Collectors.toList());
     }
 
