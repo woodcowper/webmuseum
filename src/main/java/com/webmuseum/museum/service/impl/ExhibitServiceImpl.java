@@ -148,7 +148,18 @@ public class ExhibitServiceImpl implements IExhibitService {
             exhibitViewDto.setImgUrl(ResourceHelper.getImgUrl(exhibit.getImgFileName()));
         }
         // categories info
-        exhibitViewDto.setCategories(exhibit.getCategories().stream().map((category) -> categoryService.getDescription(category, languageId).getName()).toList());
+        exhibitViewDto.setCategories(exhibit.getCategories().stream()
+            .map((category) -> {
+                CategoryDescription categoryDescription = categoryService.getDescription(category, languageId);
+                if(categoryDescription != null){
+                    return categoryDescription.getName();
+                } else {
+                    return null;
+                }
+            })
+            .filter((category) -> category != null)
+            .toList()
+        );
         // exhibitAuthor info
         List<ExhibitAuthorViewDto> authors = new ArrayList<>();
         for(ExhibitAuthor authorExhibit : exhibit.getAuthors()){
@@ -156,7 +167,9 @@ public class ExhibitServiceImpl implements IExhibitService {
             // collection info
             if(authorExhibit.getCollection() != null){
                 CollectionDescription collectionDescription = collectionService.getDescription(authorExhibit.getCollection(), languageId);
-                exhibitAuthorViewDto.setCollection(new CollectionViewDto(collectionDescription.getName(), collectionDescription.getDescription()));
+                if(collectionDescription != null){
+                    exhibitAuthorViewDto.setCollection(new CollectionViewDto(collectionDescription.getName(), collectionDescription.getDescription()));
+                }
             }
             // author info
             AuthorViewDto authorViewDto = new AuthorViewDto();
