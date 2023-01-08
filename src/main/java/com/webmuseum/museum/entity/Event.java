@@ -40,7 +40,7 @@ public class Event {
     @Column(nullable = true, length = 1000)
     private String description;
 
-    @Column(nullable = true)
+    @Column(nullable = false)
     private Date date;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

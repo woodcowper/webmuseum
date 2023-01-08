@@ -34,6 +34,7 @@ public class EventDto {
 
     private List<Long> categories = new ArrayList<>();
 
+    @NotEmpty
     private String date;
     
 }
