@@ -161,8 +161,14 @@ public class ExhibitServiceImpl implements IExhibitService {
         // exhibit info
         Exhibit exhibit = exhibitOpt.get();
         ExhibitViewDto exhibitViewDto = new ExhibitViewDto();
-        exhibitViewDto.setName(getName(exhibit, languageId));
-        exhibitViewDto.setDescription(getDesc(exhibit, languageId));
+        if(getDescription(exhibit, languageId) == null){
+            exhibitViewDto.setName(getName(exhibit, LanguageHelper.DEFAULS_LANGUAGE_ID) + LanguageHelper.NO_TRANSLATION_MESSAGE);
+            exhibitViewDto.setDescription(getDesc(exhibit, LanguageHelper.DEFAULS_LANGUAGE_ID));
+        } else {
+            exhibitViewDto.setName(getName(exhibit, languageId));
+            exhibitViewDto.setDescription(getDesc(exhibit, languageId));
+        }
+       
         if(exhibit.getImgFileName() != null && !exhibit.getImgFileName().isEmpty()){
             exhibitViewDto.setImgUrl(ResourceHelper.getImgUrl(exhibit.getImgFileName()));
         }
@@ -173,7 +179,7 @@ public class ExhibitServiceImpl implements IExhibitService {
                 if(categoryDescription != null){
                     return categoryDescription.getName();
                 } else {
-                    return null;
+                    return categoryService.getDescription(category, LanguageHelper.DEFAULS_LANGUAGE_ID).getName() + LanguageHelper.NO_TRANSLATION_MESSAGE;
                 }
             })
             .filter((category) -> category != null)
@@ -188,6 +194,9 @@ public class ExhibitServiceImpl implements IExhibitService {
                 CollectionDescription collectionDescription = collectionService.getDescription(authorExhibit.getCollection(), languageId);
                 if(collectionDescription != null){
                     exhibitAuthorViewDto.setCollection(new CollectionViewDto(collectionDescription.getName(), collectionDescription.getDescription()));
+                } else {
+                    collectionDescription = collectionService.getDescription(authorExhibit.getCollection(), LanguageHelper.DEFAULS_LANGUAGE_ID);
+                    exhibitAuthorViewDto.setCollection(new CollectionViewDto(collectionDescription.getName() + LanguageHelper.NO_TRANSLATION_MESSAGE, collectionDescription.getDescription()));
                 }
             }
             // author info
@@ -195,6 +204,10 @@ public class ExhibitServiceImpl implements IExhibitService {
             AuthorDescription authorDescription = authorService.getDescription(authorExhibit.getAuthor(), languageId);
             if(authorDescription != null){
                 authorViewDto.setName(authorDescription.getName());
+                authorViewDto.setDescription(authorDescription.getDescription());
+            } else {
+                authorDescription = authorService.getDescription(authorExhibit.getAuthor(), LanguageHelper.DEFAULS_LANGUAGE_ID);
+                authorViewDto.setName(authorDescription.getName() + LanguageHelper.NO_TRANSLATION_MESSAGE);
                 authorViewDto.setDescription(authorDescription.getDescription());
             }
             String datesLife = "";
