@@ -5,6 +5,8 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import com.webmuseum.museum.controllers.ImageController;
 
 public final class ResourceHelper {
+
+    private final static String SERVER_IP = "";
     
     public static String getImgUrl(String fileName){
         return MvcUriComponentsBuilder
@@ -17,8 +19,12 @@ public final class ResourceHelper {
     }
 
     public static String getUrl(Class controllerClass, String method, Object ...args){
-        return MvcUriComponentsBuilder
+        String uri = MvcUriComponentsBuilder
             .fromMethodName(controllerClass, method, args).toUriString();
+        if(!SERVER_IP.isEmpty()){
+            uri = uri.replaceAll("localhost:", SERVER_IP + ":");
+        }
+        return uri;
     }
 
 }
