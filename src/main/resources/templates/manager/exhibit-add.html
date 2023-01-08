@@ -23,6 +23,31 @@
           type="hidden"
       />
 
+      <input
+          name="languageId"
+          th:field="*{languageId}"
+          type="hidden"
+      />
+
+      <div th:if="${isTranslations}">
+        <input
+            name="categories"
+            th:field="*{categories}"
+            type="hidden"
+            id="categoriesFld"
+        />
+        <input
+            name="imgUrl"
+            th:field="*{imgUrl}"
+            type="hidden"
+        />
+        <div th:each="author, itemStat : *{authors}">
+          <input th:field="*{authors[__${itemStat.index}__].exhibitId}" type="hidden" >
+          <input th:field="*{authors[__${itemStat.index}__].authorId}" type="hidden">
+          <input th:field="*{authors[__${itemStat.index}__].collectionId}" type="hidden">
+        </div>
+      </div>
+
       <div class="mb-3">
         <label class="form-label">Name</label>
         <input
@@ -52,7 +77,7 @@
            th:if="${#fields.hasErrors('description')}"></div>
       </div>
 
-      <div class="mb-3" id="select-img-block">
+      <div class="mb-3" id="select-img-block" th:if="!${isTranslations}">
         <label class="form-label">Image</label>
         <input
           class="form-control"
@@ -66,7 +91,7 @@
               th:if="${#fields.hasErrors('image')}"></p>
       </div>
 
-      <div class="mb-3" id="select-img-block">
+      <div class="mb-3" id="select-img-block" th:if="!${isTranslations}">
         <label class="form-label">Categories</label>
         <select th:field="*{categories}" multiple class="w-100">
             <option th:each="category : ${categoriesList}" 
@@ -77,7 +102,7 @@
         </select>
       </div>
 
-      <div class="mb-3" id="img-block">
+      <div class="mb-3" id="img-block" th:if="!${isTranslations}">
         <div class="row">
           <div class="col-3">
             <img th:src="${exhibit.imgUrl}" class="w-100" id="img-tag">
@@ -86,7 +111,7 @@
         <button type="button" id="delete-img" class="btn btn-outline-danger">Delete image</button>
       </div>
 
-      <div id="author-list-section">
+      <div id="author-list-section" th:if="!${isTranslations}">
         <div id="author-list">
           <div th:each="author, itemStat : *{authors}" class="mb-3 img-thumbnail" th:attr="data-idx=${itemStat.index}" th:id="'author-block-' + ${itemStat.index}">
             <input th:field="*{authors[__${itemStat.index}__].exhibitId}" type="hidden" th:id="'exhibit-id-' + ${itemStat.index}">

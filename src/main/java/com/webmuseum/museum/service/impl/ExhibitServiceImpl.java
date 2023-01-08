@@ -20,12 +20,14 @@ import com.webmuseum.museum.entity.CategoryDescription;
 import com.webmuseum.museum.entity.CollectionDescription;
 import com.webmuseum.museum.entity.Exhibit;
 import com.webmuseum.museum.entity.ExhibitAuthor;
+import com.webmuseum.museum.entity.ExhibitDescription;
 import com.webmuseum.museum.repository.ExhibitRepository;
 import com.webmuseum.museum.service.IAuthorService;
 import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.ICollectionService;
 import com.webmuseum.museum.service.IExhibitAuthorService;
 import com.webmuseum.museum.service.IExhibitService;
+import com.webmuseum.museum.service.ILanguageService;
 import com.webmuseum.museum.service.IStorageService;
 import com.webmuseum.museum.utils.DateHelper;
 import com.webmuseum.museum.utils.LanguageHelper;
@@ -53,29 +55,41 @@ public class ExhibitServiceImpl implements IExhibitService {
     @Autowired 
     private IAuthorService authorService;
 
+    @Autowired
+    private ILanguageService languageService;
+
     @Override
     public List<ExhibitDto> findAllExhibits(){
+        return findAllExhibits(LanguageHelper.DEFAULS_LANGUAGE_ID);
+    }
+
+    @Override
+    public List<ExhibitDto> findAllExhibits(long languageId){
         return exhibitRepository.findAll().stream()
+            .map((exhibit) -> mapToExhibitDto(exhibit, languageId))
             .sorted((exhibit1, exhibit2) -> exhibit1.getName().compareTo(exhibit2.getName()))
-            .map((exhibit) -> mapToExhibitDto(exhibit))
             .collect(Collectors.toList());
     }
 
     @Override
     public List<ExhibitDto> findAllExhibitsForAuthor(long id) {
-        return exhibitAuthorService.findAllForAuthor(id).stream()
-            .map((exhibitAuthor) -> mapToExhibitDto(exhibitAuthor.getExhibit()))
-            .collect(Collectors.toList());
+        return findAllExhibitsForAuthor(id, LanguageHelper.DEFAULS_LANGUAGE_ID);
     }
 
+    @Override
+    public List<ExhibitDto> findAllExhibitsForAuthor(long id, long languageId) {
+        return exhibitAuthorService.findAllForAuthor(id).stream()
+            .map((exhibitAuthor) -> mapToExhibitDto(exhibitAuthor.getExhibit(), languageId))
+            .collect(Collectors.toList());
+    }
     @Override
     public Optional<Exhibit> getExhibitById(long id) {
         return exhibitRepository.findById(id);
     }
 
     @Override
-    public ExhibitDto getExhibitDtoById(long id) {
-        return mapToExhibitDto(getExhibitById(id).get());
+    public ExhibitDto getExhibitDtoById(long id, long languageId) {
+        return mapToExhibitDto(getExhibitById(id).get(), languageId);
     }
 
     @Override
@@ -125,8 +139,8 @@ public class ExhibitServiceImpl implements IExhibitService {
     }
 
     @Override
-    public boolean checkIfExistsOthers(Long exhibitId, String name, Long authorId) {
-        return findAllExhibitsForAuthor(authorId).stream()
+    public boolean checkIfExistsOthers(Long exhibitId, String name, Long authorId, long languageId) {
+        return findAllExhibitsForAuthor(authorId, languageId).stream()
                 .filter((exhibit) -> exhibit.getName().equals(name)
                                         && exhibit.getId() != exhibitId)
                 .findAny()
@@ -147,8 +161,8 @@ public class ExhibitServiceImpl implements IExhibitService {
         // exhibit info
         Exhibit exhibit = exhibitOpt.get();
         ExhibitViewDto exhibitViewDto = new ExhibitViewDto();
-        exhibitViewDto.setName(exhibit.getName());
-        exhibitViewDto.setDescription(exhibit.getDescription());
+        exhibitViewDto.setName(getName(exhibit, languageId));
+        exhibitViewDto.setDescription(getDesc(exhibit, languageId));
         if(exhibit.getImgFileName() != null && !exhibit.getImgFileName().isEmpty()){
             exhibitViewDto.setImgUrl(ResourceHelper.getImgUrl(exhibit.getImgFileName()));
         }
@@ -198,12 +212,13 @@ public class ExhibitServiceImpl implements IExhibitService {
         return exhibitViewDto;
     }
 
-    private ExhibitDto mapToExhibitDto(Exhibit exhibit){
+    private ExhibitDto mapToExhibitDto(Exhibit exhibit, long languageId){
         ExhibitDto exhibitDto = new ExhibitDto();
         exhibitDto.setId(exhibit.getId());
-        exhibitDto.setName(exhibit.getName());
-        exhibitDto.setDescription(exhibit.getDescription());
+        exhibitDto.setName(getName(exhibit, languageId));
+        exhibitDto.setDescription(getDesc(exhibit, languageId));
         exhibitDto.setImgFileName(exhibit.getImgFileName());
+        exhibitDto.setLanguageId(languageId);
 
         List<Long> categories = exhibit.getCategories().stream()
                                 .map((category) -> category.getId())
@@ -225,8 +240,16 @@ public class ExhibitServiceImpl implements IExhibitService {
         } else {
             exhibit = getExhibitById(exhibitDto.getId()).get();
         }
-        exhibit.setName(exhibitDto.getName());
-        exhibit.setDescription(exhibitDto.getDescription());
+        ExhibitDescription exhibitDescription = getDescription(exhibit, exhibitDto.getLanguageId());
+        if(exhibitDescription == null){
+            exhibitDescription = new ExhibitDescription();
+            exhibitDescription.setLanguage(languageService.getLanguageById(exhibitDto.getLanguageId()).get());
+            exhibitDescription.setExhibit(exhibit);
+            exhibit.getDescriptions().add(exhibitDescription);
+        }
+        exhibitDescription.setName(exhibitDto.getName());
+        exhibitDescription.setDescription(exhibitDto.getDescription());
+
         exhibit.setImgFileName(exhibitDto.getImgFileName());
 
         exhibit.getCategories().clear();
@@ -235,6 +258,33 @@ public class ExhibitServiceImpl implements IExhibitService {
         exhibit.getAuthors().clear();
         exhibit.getAuthors().addAll(exhibitAuthorService.mapToExhibitAuthorsList(exhibitDto.getAuthors()));
         return exhibit;
+    }
+
+    @Override
+    public ExhibitDescription getDescription(Exhibit exhibit, long languageId) {
+        Optional<ExhibitDescription> description = exhibit.getDescriptions().stream()
+                .filter((desc) -> desc.getLanguage().getId() == languageId)
+                .findFirst();
+        if (description.isPresent()) {
+            return description.get();
+        }
+        return null;
+    }
+
+    private String getName(Exhibit exhibit, long languageId){
+        ExhibitDescription exhibitDescription =  getDescription(exhibit, languageId);
+        if(exhibitDescription == null){
+            return "";
+        }
+        return exhibitDescription.getName();
+    }
+
+    private String getDesc(Exhibit exhibit, long languageId){
+        ExhibitDescription exhibitDescription =  getDescription(exhibit, languageId);
+        if(exhibitDescription == null){
+            return "";
+        }
+        return exhibitDescription.getDescription();
     }
     
 }

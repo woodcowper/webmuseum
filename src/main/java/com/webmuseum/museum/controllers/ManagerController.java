@@ -278,12 +278,14 @@ public class ManagerController {
     @GetMapping("/exhibit-list")
     public String exhibitList(Model model) {
         model.addAttribute("exhibits", exhibitService.findAllExhibits());
+        model.addAttribute("languages", languageService.findAllLanguagesWithoutId(LanguageHelper.DEFAULS_LANGUAGE_ID));
         return CONTROLLER_VIEW_DIR + "exhibit-list";
     }
 
     @GetMapping("/exhibit-author-list")
     public String exhibitList(@RequestParam(name="authorId", required=true) long authorId, Model model) {
         model.addAttribute("exhibits", exhibitService.findAllExhibitsForAuthor(authorId));
+        model.addAttribute("languages", languageService.findAllLanguagesWithoutId(LanguageHelper.DEFAULS_LANGUAGE_ID));
         return CONTROLLER_VIEW_DIR + "exhibit-list";
     }
 
@@ -293,13 +295,12 @@ public class ManagerController {
         model.addAttribute("exhibit", exhibit);
         model.addAttribute("categoriesList", categoryService.findAllExhibitCategories());
         model.addAttribute("authorsList", authorService.findAllAuthors());
-        model.addAttribute("redirectUrl", "exhibit-list"); //TODO
         return CONTROLLER_VIEW_DIR + "exhibit-add";
     }
 
     @GetMapping("/exhibit-edit")
     public String exhibitEdit(@RequestParam long id, Model model) {
-        ExhibitDto exhibit = exhibitService.getExhibitDtoById(id);
+        ExhibitDto exhibit = exhibitService.getExhibitDtoById(id, LanguageHelper.DEFAULS_LANGUAGE_ID);
         model.addAttribute("exhibit", exhibit);
         model.addAttribute("categoriesList", categoryService.findAllExhibitCategories());
         model.addAttribute("authorsList", authorService.findAllAuthors());
@@ -310,7 +311,7 @@ public class ManagerController {
     public String exhibitSave(@Valid @ModelAttribute("exhibit") ExhibitDto exhibit, BindingResult result, Model model) {
         exhibit.clearEmptyAuthors();
         for(ExhibitAuthorDto exhibitAthor: exhibit.getAuthors()){
-            if(exhibitService.checkIfExistsOthers(exhibit.getId(), exhibit.getName(), exhibitAthor.getAuthorId())){
+            if(exhibitService.checkIfExistsOthers(exhibit.getId(), exhibit.getName(), exhibitAthor.getAuthorId(), exhibit.getLanguageId())){
                 Author author = authorService.getAuthorById(exhibitAthor.getAuthorId()).get();
                 result.rejectValue("name", null,
                     "There is already exhibit for " + authorService.getDescription(author, LanguageHelper.DEFAULS_LANGUAGE_ID).getName() +  " added with the same name");
@@ -319,15 +320,24 @@ public class ManagerController {
         }
 
         if (result.hasErrors()) {
+            System.out.println("---ERROR: " + result.getAllErrors());
             model.addAttribute("exhibit", exhibit);
             model.addAttribute("categoriesList", categoryService.findAllExhibitCategories());
             model.addAttribute("authorsList", authorService.findAllAuthors());
-
+            model.addAttribute("isTranslations", exhibit.getLanguageId() != LanguageHelper.DEFAULS_LANGUAGE_ID);
             return CONTROLLER_VIEW_DIR + "exhibit-add";
         }
         
         exhibitService.saveExhibit(exhibit);
         return "redirect:/" + CONTROLLER_VIEW_DIR + "exhibit-list";
+    }
+
+    @GetMapping("/exhibit-translation")
+    public String exhibitTranslation(@RequestParam long exhibitId, @RequestParam long languageId, Model model) {
+        ExhibitDto exhibit = exhibitService.getExhibitDtoById(exhibitId, languageId);
+        model.addAttribute("exhibit", exhibit);
+        model.addAttribute("isTranslations", true);
+        return CONTROLLER_VIEW_DIR + "exhibit-add";
     }
 
     @GetMapping("/exhibit-delete")

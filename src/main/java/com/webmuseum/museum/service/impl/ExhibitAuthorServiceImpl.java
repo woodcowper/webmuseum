@@ -11,6 +11,7 @@ import com.webmuseum.museum.dto.ExhibitAuthorDto;
 import com.webmuseum.museum.entity.AuthorDescription;
 import com.webmuseum.museum.entity.ExhibitAuthor;
 import com.webmuseum.museum.entity.ExhibitAuthorId;
+import com.webmuseum.museum.entity.ExhibitDescription;
 import com.webmuseum.museum.repository.ExhibitAuthorRepository;
 import com.webmuseum.museum.service.IAuthorService;
 import com.webmuseum.museum.service.ICollectionService;
@@ -38,7 +39,11 @@ public class ExhibitAuthorServiceImpl implements IExhibitAuthorService{
         List<ExhibitAuthor> exhibitAuthors = exhibitAuthorRepository.findAll();
         return exhibitAuthors.stream()
                 .filter((exhibitAuthor) -> exhibitAuthor.getAuthor().getId() == id)
-                .sorted((exhibitAuthor1, exhibitAuthor2) -> exhibitAuthor1.getExhibit().getName().compareTo(exhibitAuthor1.getExhibit().getName()))
+                .sorted((exhibitAuthor1, exhibitAuthor2) -> {
+                    ExhibitDescription exhibitDescription1 = exhibitService.getDescription(exhibitAuthor1.getExhibit(), LanguageHelper.DEFAULS_LANGUAGE_ID); 
+                    ExhibitDescription exhibitDescription2 = exhibitService.getDescription(exhibitAuthor2.getExhibit(), LanguageHelper.DEFAULS_LANGUAGE_ID); 
+                    return exhibitDescription1.getName().compareTo(exhibitDescription2.getName());
+                })
                 .collect(Collectors.toList());
     }
 

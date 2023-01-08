@@ -31,14 +31,8 @@ public class Exhibit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String name;
-
     @Column(nullable = true)
     private String imgFileName;
-
-    @Column(nullable = true, length = 1000)
-    private String description;
 
     @Column(nullable = true)
     private String qrFileName;
@@ -58,5 +52,8 @@ public class Exhibit {
         orphanRemoval = true
     )
     private List<ExhibitAuthor> authors = new ArrayList<>();
+
+    @OneToMany(targetEntity=ExhibitDescription.class, mappedBy="exhibit", cascade = CascadeType.ALL)
+    private List<ExhibitDescription> descriptions = new ArrayList<>();
 
 }

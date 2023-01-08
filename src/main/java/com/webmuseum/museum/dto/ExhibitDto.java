@@ -5,16 +5,16 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.webmuseum.museum.utils.LanguageHelper;
+
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class ExhibitDto {
     private Long id;
@@ -37,6 +37,12 @@ public class ExhibitDto {
     private List<ExhibitAuthorDto> authors = new ArrayList<>();
 
     private List<Long> categories = new ArrayList<>();
+
+    private Long languageId;
+
+    public ExhibitDto() {
+        this.languageId = LanguageHelper.DEFAULS_LANGUAGE_ID;
+    }
 
     public void clearEmptyAuthors(){
         authors.removeIf(author -> author.getAuthorId() == null);
