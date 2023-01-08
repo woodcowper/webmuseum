@@ -12,11 +12,10 @@
           </tr>
         </thead>
         <tbody>
-            <tr th:each="event: ${events}">
-                <td scope="row" th:text="${event.id}" />
+            <tr th:each="event, i: ${events}">
+              <td scope="row" th:text="${i.index + 1}" />
                 <td th:text="${event.name}" />
                 <td>
-                    <a href="" class="btn btn-outline-primary">View</a>
                     <a th:href="@{/manager/event-edit(id=${event.id})}" class="btn btn-outline-warning">Edit</a>
                     <a th:href="@{/manager/event-delete(id=${event.id})}" class="btn btn-outline-danger">Delete</a>
                 </td>

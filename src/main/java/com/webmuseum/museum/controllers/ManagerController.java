@@ -278,6 +278,7 @@ public class ManagerController {
     @GetMapping("/exhibit-list")
     public String exhibitList(Model model) {
         model.addAttribute("exhibits", exhibitService.findAllExhibits());
+        model.addAttribute("default_language", languageService.getLanguageDtoById(LanguageHelper.DEFAULS_LANGUAGE_ID));
         model.addAttribute("languages", languageService.findAllLanguagesWithoutId(LanguageHelper.DEFAULS_LANGUAGE_ID));
         return CONTROLLER_VIEW_DIR + "exhibit-list";
     }

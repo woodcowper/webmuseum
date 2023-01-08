@@ -12,11 +12,10 @@
           </tr>
         </thead>
         <tbody>
-            <tr th:each="author: ${authors}">
-                <td scope="row" th:text="${author.id}" />
+            <tr th:each="author, i: ${authors}">
+              <td scope="row" th:text="${i.index + 1}" />
                 <td th:text="${author.fullName}" />
                 <td>
-                    <a href="" class="btn btn-outline-primary">View</a>
                     <a th:href="@{/manager/author-edit(id=${author.id})}" class="btn btn-outline-warning">Edit</a>
                     <a th:href="@{/manager/author-delete(id=${author.id})}" class="btn btn-outline-danger">Delete</a>
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">

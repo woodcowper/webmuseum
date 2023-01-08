@@ -12,16 +12,13 @@
           </tr>
         </thead>
         <tbody>
-            <tr th:each="manager: ${managers}">
-                <td scope="row" th:text="${manager.id}" />
+            <tr th:each="manager, i: ${managers}">
+              <td scope="row" th:text="${i.index + 1}" />
                 <td th:text="${manager.name}" />
                 <td>
-                    <a href="" class="btn btn-outline-primary">View</a>
                     <a th:href="@{/admin/manager-edit(id=${manager.id})}" class="btn btn-outline-warning">Edit</a>
                     <a th:href="@{/admin/manager-delete(id=${manager.id})}" class="btn btn-outline-danger">Delete</a>
                     <a th:href="@{/admin/manager-gen-and-send-pass(id=${manager.id})}" class="btn btn-info">Generate new password and send to Email</a>
-
-                    
                 </td>
             </tr>
       </table>

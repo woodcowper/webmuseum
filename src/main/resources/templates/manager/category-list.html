@@ -12,11 +12,10 @@
           </tr>
         </thead>
         <tbody>
-            <tr th:each="category: ${categories}">
-                <td scope="row" th:text="${category.id}" />
+            <tr th:each="category, i: ${categories}">
+              <td scope="row" th:text="${i.index + 1}" />
                 <td th:text="${category.name}" />
                 <td>
-                    <a href="" class="btn btn-outline-primary">View</a>
                     <a th:href="@{/manager/category-edit(id=${category.id})}" class="btn btn-outline-warning">Edit</a>
                     <a th:href="@{/manager/category-delete(id=${category.id})}" class="btn btn-outline-danger">Delete</a>
                     <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
