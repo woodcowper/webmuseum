@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.webmuseum.museum.dto.ExhibitDto;
 import com.webmuseum.museum.dto.ExhibitViewDto;
+import com.webmuseum.museum.dto.LanguageDto;
 import com.webmuseum.museum.entity.Exhibit;
 import com.webmuseum.museum.entity.ExhibitDescription;
 
@@ -34,5 +35,7 @@ public interface IExhibitService {
     ExhibitViewDto getExhibitViewDto(Long exhibitId, Long languageId);
 
     ExhibitDescription getDescription(Exhibit exhibit, long languageId);
+
+    List<LanguageDto> getSupportedLanguages(Long exhibitId);
 
 }

@@ -15,6 +15,7 @@ import com.webmuseum.museum.dto.CollectionViewDto;
 import com.webmuseum.museum.dto.ExhibitAuthorViewDto;
 import com.webmuseum.museum.dto.ExhibitDto;
 import com.webmuseum.museum.dto.ExhibitViewDto;
+import com.webmuseum.museum.dto.LanguageDto;
 import com.webmuseum.museum.entity.AuthorDescription;
 import com.webmuseum.museum.entity.CategoryDescription;
 import com.webmuseum.museum.entity.CollectionDescription;
@@ -114,7 +115,7 @@ public class ExhibitServiceImpl implements IExhibitService {
                 exhibit.getAuthors().addAll(authors);
             }
             exhibitRepository.save(exhibit);
-            String fileName = storageService.storeQR(ResourceHelper.getUrl(MainController.class, "exhibitDetails", exhibit.getId(), null),  exhibit.getId().toString());
+            String fileName = storageService.storeQR(ResourceHelper.getUrl(MainController.class, "exhibitDetailsChooseLang", exhibit.getId(), null),  exhibit.getId().toString());
             exhibit.setQrFileName(fileName);
         }
         
@@ -145,6 +146,15 @@ public class ExhibitServiceImpl implements IExhibitService {
                                         && exhibit.getId() != exhibitId)
                 .findAny()
                 .isPresent();
+    }
+
+    @Override
+    public List<LanguageDto> getSupportedLanguages(Long exhibitId){
+        Exhibit exhibit = getExhibitById(exhibitId).get();
+        return exhibit.getDescriptions().stream()
+            .map((desc) -> languageService.getLanguageDtoById(desc.getLanguage().getId()))
+            .sorted((lang1, lang2) -> lang1.getId().compareTo(lang2.getId()))
+            .toList();
     }
 
     @Override

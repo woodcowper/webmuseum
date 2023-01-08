@@ -24,10 +24,16 @@ public class MainController {
 		return CONTROLLER_VIEW_DIR + "main";
 	}
 
-	@GetMapping({"/exhibit-details", "/"})
-	public String exhibitDetails(@RequestParam(name="exhibitId", required=true) Long exhibitId, Model model) {
-		ExhibitViewDto exhibit = exhibitService.getExhibitViewDto(exhibitId);		
+	@GetMapping({"/exhibit-details-choose-lang", "/"})
+	public String exhibitDetailsChooseLang(@RequestParam(name="exhibitId", required=true) Long exhibitId, Model model) {
+		model.addAttribute("exhibitId", exhibitId);
+		model.addAttribute("languages", exhibitService.getSupportedLanguages(exhibitId));
+		return CONTROLLER_VIEW_DIR + "exhibit-details-choose-lang";
+	}
 
+	@GetMapping({"/exhibit-details", "/"})
+	public String exhibitDetails(@RequestParam Long exhibitId, @RequestParam Long languageId, Model model) {
+		ExhibitViewDto exhibit = exhibitService.getExhibitViewDto(exhibitId, languageId);		
 		model.addAttribute("exhibit", exhibit);
 		return CONTROLLER_VIEW_DIR + "exhibit-details";
 	}
