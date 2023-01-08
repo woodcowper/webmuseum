@@ -127,20 +127,20 @@ public class CollectionServiceImpl implements ICollectionService{
         return null;
     }
 
-    private String getName(Collection category, long languageId){
-        CollectionDescription categoryDescription =  getDescription(category, languageId);
-        if(categoryDescription == null){
+    private String getName(Collection collection, long languageId){
+        CollectionDescription collectionDescription =  getDescription(collection, languageId);
+        if(collectionDescription == null){
             return "";
         }
-        return categoryDescription.getName();
+        return collectionDescription.getName();
     }
 
-    private String getDesc(Collection category, long languageId){
-        CollectionDescription categoryDescription =  getDescription(category, languageId);
-        if(categoryDescription == null){
+    private String getDesc(Collection collection, long languageId){
+        CollectionDescription collectionDescription =  getDescription(collection, languageId);
+        if(collectionDescription == null){
             return "";
         }
-        return categoryDescription.getDescription();
+        return collectionDescription.getDescription();
     }
 
 }
