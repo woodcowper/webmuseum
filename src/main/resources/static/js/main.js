@@ -12,8 +12,52 @@ $( document ).ready(function(){
 
     $("#btn-add-author").click(addNewAuthor);
 
+    $(".subscribe-event-btn").click(subscribeEvent);
+    $(".unsubscribe-event-btn").click(unsubscribeEvent);
+
+
     loadFieldsData();
 });
+
+function subscribeEvent(e){
+    var curEl = $(e.target);
+    var eventId = curEl.data("id");
+    $.ajax({
+        url: "/ajax/subscribe-event",
+        data: {
+            eventId: eventId
+        },
+        type: "GET",
+
+        success: function(isSuccess){
+            isSuccess = JSON.parse(isSuccess);
+            if(isSuccess){
+                curEl.parent().find('.unsubscribe-event-btn').removeClass('d-none');
+                curEl.addClass('d-none');
+            }
+        }
+    });
+}
+
+function unsubscribeEvent(e){
+    var curEl = $(e.target);
+    var eventId = curEl.data("id");
+    $.ajax({
+        url: "/ajax/unsubscribe-event",
+        data: {
+            eventId: eventId
+        },
+        type: "GET",
+
+        success: function(isSuccess){
+            isSuccess = JSON.parse(isSuccess);
+            if(isSuccess){
+                curEl.parent().find('.subscribe-event-btn').removeClass('d-none');
+                curEl.addClass('d-none');
+            }
+        }
+    });
+}
 
 const authorBlockTemplate = `<div class="mb-3 img-thumbnail" data-idx="|n|" id="author-block-|n|">
             <input name="authors[|n|].exhibitId" type="hidden" id="exhibit-id-|n|">
