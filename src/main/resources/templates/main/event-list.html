@@ -21,7 +21,9 @@
         <div class="d-flex justify-content-between align-items-center">
           <div class="">
             <a th:href="@{/main/event-view(eventId=${event.id})}" class="btn btn-outline-primary">View</a>
-            <a  class="btn btn-outline-primary">Subscribe</a>
+            <a th:href="@{/auth/login}" class="btn btn-outline-primary" th:if="${event.isSubscribed == null}">Subscribe</a>
+            <button th:class="'btn btn-success subscribe-event-btn ' + ${event.isSubscribed == true ? 'd-none':''}" th:attr="data-id=${event.id}" th:if="${event.isSubscribed != null}">Subscribe</button>
+            <button th:class="'btn btn-danger unsubscribe-event-btn ' + ${event.isSubscribed == false ? 'd-none':''}" th:attr="data-id=${event.id}" th:if="${event.isSubscribed != null}">Unsubscribe</button>
           </div>
         </div>
       </div>

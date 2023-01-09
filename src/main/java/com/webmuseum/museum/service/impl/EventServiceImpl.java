@@ -12,10 +12,12 @@ import com.webmuseum.museum.dto.EventDto;
 import com.webmuseum.museum.dto.EventViewDto;
 import com.webmuseum.museum.entity.Category;
 import com.webmuseum.museum.entity.Event;
+import com.webmuseum.museum.entity.User;
 import com.webmuseum.museum.repository.EventRepository;
 import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.IEventService;
 import com.webmuseum.museum.service.IStorageService;
+import com.webmuseum.museum.service.IUserService;
 import com.webmuseum.museum.utils.DateHelper;
 import com.webmuseum.museum.utils.LanguageHelper;
 import com.webmuseum.museum.utils.ResourceHelper;
@@ -31,6 +33,19 @@ public class EventServiceImpl implements IEventService {
 
     @Autowired
     private IStorageService storageService;
+
+    @Autowired
+    private IUserService userService;
+
+
+    @Override
+    public List<EventDto> findAllEventsForCurUser(){
+        User curUser = userService.getCurrentUser();
+        return curUser.getSubscribedEvents().stream()
+            .sorted((event1, event2) -> event1.getDate().compareTo(event2.getDate()))
+            .map((event) -> mapToEventDto(event))
+            .collect(Collectors.toList());
+    }
 
     @Override
     public List<EventDto> findAllEvents(){
@@ -119,6 +134,38 @@ public class EventServiceImpl implements IEventService {
                 .isPresent();
     }
 
+    @Override
+    public boolean subscribeEvent(User user, long eventId){
+        if (user.getSubscribedEvents().stream().anyMatch((ev) -> ev.getId() == eventId)) {
+            return true;
+        }
+        Optional<Event> optEvent = getEventById(eventId);
+        if (!optEvent.isPresent()) {
+            return false;
+        }
+        Event event = optEvent.get();
+        event.getSubscribers().add(user);
+        user.getSubscribedEvents().add(event);
+        userService.saveUser(user);
+        return true;
+    }
+
+    @Override
+    public boolean unsubscribeEvent(User user, long eventId){
+        if (!user.getSubscribedEvents().stream().anyMatch((ev) -> ev.getId() == eventId)) {
+            return true;
+        }
+        Optional<Event> optEvent = getEventById(eventId);
+        if (!optEvent.isPresent()) {
+            return false;
+        }
+        Event event = optEvent.get();
+        event.getSubscribers().remove(user);
+        user.getSubscribedEvents().remove(event);
+        userService.saveUser(user);
+        return true;
+    }
+
     private EventDto mapToEventDto(Event event){
         EventDto eventDto = new EventDto();
         eventDto.setId(event.getId());
@@ -135,6 +182,8 @@ public class EventServiceImpl implements IEventService {
         if(event.getImgFileName() != null){
             eventDto.setImgUrl(ResourceHelper.getImgUrl(event.getImgFileName()));
         }
+
+        eventDto.setIsSubscribed(checkIfSubscribed(event.getId()));
         return eventDto;
     }
 
@@ -155,6 +204,14 @@ public class EventServiceImpl implements IEventService {
         return event;
     }
 
+    private Boolean checkIfSubscribed(Long eventId){
+        User curUser = userService.getCurrentUser();
+        if(curUser == null || eventId == null){
+            return null;
+        }
+        return curUser.getSubscribedEvents().stream().anyMatch((ev) -> ev.getId() == eventId);   
+    }
+
     @Override
     public EventViewDto getEventViewDto(Long eventId){
         Event event = getEventById(eventId).get();
@@ -172,6 +229,8 @@ public class EventServiceImpl implements IEventService {
         if(event.getImgFileName() != null && !event.getImgFileName().isEmpty()){
             eventViewDto.setImgUrl(ResourceHelper.getImgUrl(event.getImgFileName()));
         }
+        eventViewDto.setIsSubscribed(checkIfSubscribed(event.getId()));
+        eventViewDto.setId(eventId);
 
         return eventViewDto;
     }

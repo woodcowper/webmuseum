@@ -6,7 +6,9 @@
     <span th:each="category, itemStat : *{event.categories}" class="badge text-bg-primary me-1" th:text="${category}"></span>
     <p class="lead mt-2" th:text="'Date: ' + ${event.date}"></p>
     <p class="lead" th:text="${event.description}"></p>
-    <a  class="btn btn-outline-primary mb-4">Subscribe</a>
+    <a th:href="@{/auth/login}" class="btn btn-outline-primary" th:if="${event.isSubscribed == null}">Subscribe</a>
+    <button th:class="'btn btn-success subscribe-event-btn ' + ${event.isSubscribed == true ? 'd-none':''}" th:attr="data-id=${event.id}" th:if="${event.isSubscribed != null}">Subscribe</button>
+    <button th:class="'btn btn-danger unsubscribe-event-btn ' + ${event.isSubscribed == false ? 'd-none':''}" th:attr="data-id=${event.id}" th:if="${event.isSubscribed != null}">Unsubscribe</button>
   </div>
   <div class="col-md-5">
      <img th:src="${event.imgUrl}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto">
@@ -19,7 +21,9 @@
     <span th:each="category, itemStat : *{event.categories}" class="badge text-bg-primary me-1" th:text="${category}"></span>
     <p th:text="'Date: ' + ${event.date}"></p>
     <p class="lead" th:text="${event.description}"></p>
-    <a  class="btn btn-outline-primary mb-2">Subscribe</a>
+    <a th:href="@{/auth/login}" class="btn btn-outline-primary" th:if="${event.isSubscribed == null}">Subscribe</a>
+    <button th:class="'btn btn-success subscribe-event-btn ' + ${event.isSubscribed == true ? 'd-none':''}" th:attr="data-id=${event.id}" th:if="${event.isSubscribed != null}">Subscribe</button>
+    <button th:class="'btn btn-danger unsubscribe-event-btn ' + ${event.isSubscribed == false ? 'd-none':''}" th:attr="data-id=${event.id}" th:if="${event.isSubscribed != null}">Unsubscribe</button>
   </div>
 </div>
 

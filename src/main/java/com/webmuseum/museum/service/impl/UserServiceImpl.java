@@ -7,12 +7,15 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.text.RandomStringGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.webmuseum.museum.dto.UserDto;
 import com.webmuseum.museum.entity.Role;
 import com.webmuseum.museum.entity.User;
+import com.webmuseum.museum.models.AppUserPrincipal;
 import com.webmuseum.museum.repository.UserRepository;
 import com.webmuseum.museum.service.IRoleService;
 import com.webmuseum.museum.service.IUserService;
@@ -30,9 +33,13 @@ public class UserServiceImpl implements IUserService {
     private IRoleService roleService;
 
     @Override
-    public void saveUser(UserDto userDto) {
-        User user = mapToUser(userDto);
+    public void saveUser(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public void saveUser(UserDto userDto) {
+        saveUser(mapToUser(userDto));
     }
 
     @Override
@@ -120,6 +127,14 @@ public class UserServiceImpl implements IUserService {
                                         && user.getId() != userId)
                 .findAny()
                 .isPresent();
+    }
+
+    public User getCurrentUser(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.getPrincipal() instanceof AppUserPrincipal){
+            return findUserByEmail(auth.getName());
+        } 
+        return null;
     }
 
     private UserDto mapToUserDto(User user){

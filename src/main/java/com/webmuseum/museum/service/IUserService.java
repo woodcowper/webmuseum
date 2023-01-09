@@ -9,6 +9,8 @@ import com.webmuseum.museum.entity.User;
 public interface IUserService {
     void saveUser(UserDto userDto);
 
+    void saveUser(User userDto);
+
     Optional<User> findUserById(Long id);
 
     UserDto getUserDtoById(long id);
@@ -32,6 +34,8 @@ public interface IUserService {
     boolean setNewPassword(long id, String password);
 
     boolean checkIfExistsOthers(Long userId, String email);
+
+    User getCurrentUser();
 
 
 }

@@ -17,6 +17,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class EventViewDto {
+    private Long id;
+    
     private String name;
 
     private String imgUrl;
@@ -26,5 +28,7 @@ public class EventViewDto {
     private List<String> categories = new ArrayList<>();
 
     private String date;
+
+    private Boolean isSubscribed;
     
 }

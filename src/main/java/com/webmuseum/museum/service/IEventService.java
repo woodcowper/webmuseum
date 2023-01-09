@@ -6,8 +6,11 @@ import java.util.Optional;
 import com.webmuseum.museum.dto.EventDto;
 import com.webmuseum.museum.dto.EventViewDto;
 import com.webmuseum.museum.entity.Event;
+import com.webmuseum.museum.entity.User;
 
 public interface IEventService {
+    List<EventDto> findAllEventsForCurUser();
+
     List<EventDto> findAllEvents();
 
     List<EventDto> findAllEventsForCategory(long id);
@@ -29,4 +32,10 @@ public interface IEventService {
     boolean checkIfExistsOthers(Long eventId, String name);
 
     EventViewDto getEventViewDto(Long eventId);
+
+    boolean subscribeEvent(User user, long eventId);
+
+    boolean unsubscribeEvent(User user, long eventId);
+
+    
 }

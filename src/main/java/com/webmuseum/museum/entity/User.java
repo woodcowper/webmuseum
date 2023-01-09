@@ -38,10 +38,10 @@ public class User {
     )
     private List<Role> roles = new ArrayList<>();
 
-    @ManyToMany(targetEntity=Event.class, mappedBy = "subscribers")
+    @ManyToMany(targetEntity=Event.class, mappedBy = "subscribers", cascade = CascadeType.ALL)
     private List<Event> subscribedEvents = new ArrayList<>();
 
-    @ManyToMany(targetEntity=Category.class, mappedBy = "subscribers")
+    @ManyToMany(targetEntity=Category.class, mappedBy = "subscribers", cascade = CascadeType.ALL)
     private List<Category> subscribedCategoryEvents = new ArrayList<>();
 
 }

@@ -36,5 +36,7 @@ public class EventDto {
 
     @NotEmpty
     private String date;
+
+    private Boolean isSubscribed;
     
 }
