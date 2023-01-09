@@ -18,7 +18,7 @@ import com.webmuseum.museum.service.IExhibitService;
 import com.webmuseum.museum.utils.ResourceHelper;
 
 @Controller
-@RequestMapping("main")
+@RequestMapping({"main", ""})
 public class MainController {
 	final String CONTROLLER_VIEW_DIR = "main/";
 
@@ -31,19 +31,24 @@ public class MainController {
 	@Autowired
     private ICategoryService categoryService;
 
-	@GetMapping({"/main", "/"})
+	@GetMapping("/")
+	public String index(Model model) {
+		return CONTROLLER_VIEW_DIR + "index";
+	}
+
+	@GetMapping("/main")
 	public String main(Model model) {
 		return CONTROLLER_VIEW_DIR + "main";
 	}
 
-	@GetMapping({"/exhibit-details-choose-lang", "/"})
+	@GetMapping("/exhibit-details-choose-lang")
 	public String exhibitDetailsChooseLang(@RequestParam(name="exhibitId", required=true) Long exhibitId, Model model) {
 		model.addAttribute("exhibitId", exhibitId);
 		model.addAttribute("languages", exhibitService.getSupportedLanguages(exhibitId));
 		return CONTROLLER_VIEW_DIR + "exhibit-details-choose-lang";
 	}
 
-	@GetMapping({"/exhibit-details", "/"})
+	@GetMapping("/exhibit-details")
 	public String exhibitDetails(@RequestParam Long exhibitId, @RequestParam Long languageId, Model model) {
 		ExhibitViewDto exhibit = exhibitService.getExhibitViewDto(exhibitId, languageId);		
 		model.addAttribute("exhibit", exhibit);
