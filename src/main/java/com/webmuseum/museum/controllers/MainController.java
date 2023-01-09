@@ -1,5 +1,7 @@
 package com.webmuseum.museum.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -7,10 +9,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.gson.Gson;
 import com.webmuseum.museum.dto.ExhibitViewDto;
+import com.webmuseum.museum.entity.Event;
 import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.IEventService;
 import com.webmuseum.museum.service.IExhibitService;
+import com.webmuseum.museum.utils.ResourceHelper;
 
 @Controller
 @RequestMapping("main")
@@ -46,7 +51,7 @@ public class MainController {
 	}
 
 	@GetMapping("/event-list")
-    public String eventList(@RequestParam(name="categoryId", required=false) Long categoryId,Model model) {
+    public String eventList(@RequestParam(name="categoryId", required=false) Long categoryId, Model model) { 
 		if(categoryId == null){
 			model.addAttribute("events", eventService.findAllFuturesEvents());
 		} else {

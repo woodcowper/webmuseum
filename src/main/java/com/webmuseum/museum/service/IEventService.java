@@ -9,6 +9,11 @@ import com.webmuseum.museum.entity.Event;
 import com.webmuseum.museum.entity.User;
 
 public interface IEventService {
+
+    List<Event> findEventsOnNextDay();
+
+    List<Event> findEventsCreatedByLastDay();
+
     List<EventDto> findAllEventsForCurUser();
 
     List<EventDto> findAllEvents();

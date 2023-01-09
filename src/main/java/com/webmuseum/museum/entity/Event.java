@@ -43,7 +43,10 @@ public class Event {
     @Column(nullable = false)
     private Date date;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @Column(nullable = false)
+    private Date createdAt;
+
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "event_category",
             joinColumns = { @JoinColumn(name = "event_id", referencedColumnName = "id") },

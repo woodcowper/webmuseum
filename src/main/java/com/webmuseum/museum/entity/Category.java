@@ -54,7 +54,7 @@ public class Category {
     private List<User> subscribers = new ArrayList<>();
 
 
-    @OneToMany(targetEntity=CategoryDescription.class, mappedBy="category", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, targetEntity=CategoryDescription.class, mappedBy="category", cascade = CascadeType.ALL)
     private List<CategoryDescription> descriptions = new ArrayList<>();
 
 }

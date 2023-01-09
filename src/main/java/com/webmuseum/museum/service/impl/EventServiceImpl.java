@@ -1,5 +1,7 @@
 package com.webmuseum.museum.service.impl;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +39,25 @@ public class EventServiceImpl implements IEventService {
     @Autowired
     private IUserService userService;
 
+
+    @Override
+    public List<Event> findEventsOnNextDay(){
+        LocalDate todayDate = LocalDate.now().plusDays(1);
+        Date nextDay = Date.from(todayDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return eventRepository.findAll().stream()
+            .filter((event) -> event.getDate().compareTo(nextDay) == 0)
+            .sorted((event1, event2) -> event1.getName().compareTo(event2.getName()))
+            .collect(Collectors.toList());
+    }
+    @Override
+    public List<Event> findEventsCreatedByLastDay(){
+        LocalDate todayDate = LocalDate.now().minusDays(1);
+        Date prevDay = Date.from(todayDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        return eventRepository.findAll().stream()
+            .filter((event) -> event.getCreatedAt().compareTo(prevDay) == 0)
+            .sorted((event1, event2) -> event1.getName().compareTo(event2.getName()))
+            .collect(Collectors.toList());
+    }
 
     @Override
     public List<EventDto> findAllEventsForCurUser(){
@@ -105,6 +126,9 @@ public class EventServiceImpl implements IEventService {
 
     @Override
     public void saveEvent(Event event) {
+        if(event.getId() == null){
+            event.setCreatedAt(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        }
         eventRepository.save(event);
     }
 
