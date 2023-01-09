@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.webmuseum.museum.dto.EventDto;
 import com.webmuseum.museum.dto.ExhibitViewDto;
 import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.IEventService;
@@ -28,8 +27,7 @@ public class MainController {
     private ICategoryService categoryService;
 
 	@GetMapping({"/main", "/"})
-	public String main(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
-		model.addAttribute("name", name);
+	public String main(Model model) {
 		return CONTROLLER_VIEW_DIR + "main";
 	}
 
