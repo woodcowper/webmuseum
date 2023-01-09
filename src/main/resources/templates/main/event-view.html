@@ -11,7 +11,7 @@
     <button th:class="'btn btn-danger unsubscribe-event-btn ' + ${event.isSubscribed == false ? 'd-none':''}" th:attr="data-id=${event.id}" th:if="${event.isSubscribed != null}">Unsubscribe</button>
   </div>
   <div class="col-md-5">
-     <img th:src="${event.imgUrl}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto">
+     <img th:src="${event.imgUrl}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto w-100">
   </div>
 </div>
 
