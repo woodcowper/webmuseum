@@ -21,6 +21,8 @@ public interface IUserService {
 
     List<UserDto> findAllUsers();
 
+    List<UserDto> findUsersEmailStartsWith(String text);
+
     List<UserDto> findAllManagers();
 
     List<UserDto> findAllClients();

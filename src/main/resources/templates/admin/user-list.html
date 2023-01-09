@@ -2,36 +2,48 @@
 
 
 <div class="container">
-    <h3>Users: <a th:href="@{/admin/user-add}" class="btn btn-outline-success">Add</a></h3>
-      <table class="table">
-        <thead class="table-dark">
-          <tr>
-            <th scope="col">#</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col" style="width: 20%;">Roles</th>
-            <th scope="col">Controls</th>
-          </tr>
-        </thead>
-        <tbody>
-            <tr th:each="user, i: ${users}">
-              <td scope="row" th:text="${i.index + 1}" />
-                <td th:text="${user.name}" />
-                <span th:if="${#authentication.getName() == user.email}"></span>
-                <td th:text="${user.email}" />
-                <td>
-                  <span th:if="${user.isSuperAdmin}" class="badge text-bg-dark">Super Admin</span>
-                  <span th:if="${user.isAdmin}" class="badge text-bg-success">Admin</span>
-                  <span th:if="${user.isManager}" class="badge text-bg-warning">Manager</span>
-                  <span th:if="${user.isClient}" class="badge text-bg-primary">Client</span>
-                </td>
-                <td>
-                    <a th:if="${!user.isSuperAdmin}" th:href="@{/admin/user-edit(id=${user.id})}" class="btn btn-outline-warning mb-1">Edit</a>
-                    <a th:if="${!user.isSuperAdmin && #authentication.getName() != user.email}" th:href="@{/admin/user-delete(id=${user.id})}" class="btn btn-outline-danger mb-1">Delete</a>
-                    <a th:if="!${user.isSuperAdmin}" th:href="@{/admin/user-gen-and-send-pass(id=${user.id})}" class="btn btn-info mb-1">Send new password to email</a>
-                </td>
-            </tr>
-      </table>
+  <h3>Users: <a th:href="@{/admin/user-add}" class="btn btn-outline-success">Add</a></h3>
+  <div>
+    <form method="get" role="form" th:action="@{/admin/user-list}">
+      <div class="mb-3 d-flex">
+        <input class="form-control me-1 w-25" id="filterText" name="filterText" placeholder="Filter by email"
+          type="text" th:value="${filterText}"/>
+        <button class="btn btn-primary" type="submit">Filter</button>
+      </div>
+    </form>
+  </div>
+  <table class="table">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Email</th>
+        <th scope="col" style="width: 20%;">Roles</th>
+        <th scope="col">Controls</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="user, i: ${users}">
+        <td scope="row" th:text="${i.index + 1}" />
+        <td th:text="${user.name}" />
+        <span th:if="${#authentication.getName() == user.email}"></span>
+        <td th:text="${user.email}" />
+        <td>
+          <span th:if="${user.isSuperAdmin}" class="badge text-bg-dark">Super Admin</span>
+          <span th:if="${user.isAdmin}" class="badge text-bg-success">Admin</span>
+          <span th:if="${user.isManager}" class="badge text-bg-warning">Manager</span>
+          <span th:if="${user.isClient}" class="badge text-bg-primary">Client</span>
+        </td>
+        <td>
+          <a th:if="${!user.isSuperAdmin}" th:href="@{/admin/user-edit(id=${user.id})}"
+            class="btn btn-outline-warning mb-1">Edit</a>
+          <a th:if="${!user.isSuperAdmin && #authentication.getName() != user.email}"
+            th:href="@{/admin/user-delete(id=${user.id})}" class="btn btn-outline-danger mb-1">Delete</a>
+          <a th:if="!${user.isSuperAdmin}" th:href="@{/admin/user-gen-and-send-pass(id=${user.id})}"
+            class="btn btn-info mb-1">Send new password to email</a>
+        </td>
+      </tr>
+  </table>
 </div>
 
 <div th:replace="fragments/footer"></div>

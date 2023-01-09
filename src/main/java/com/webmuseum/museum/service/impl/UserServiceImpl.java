@@ -76,6 +76,15 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    public List<UserDto> findUsersEmailStartsWith(String text) {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .filter((user) -> user.getEmail().toLowerCase().startsWith(text.toLowerCase()))
+                .map((user) -> mapToUserDto(user))
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<UserDto> findAllManagers() {
         Role role = roleService.getManagerRole();
         return findAllByRole(role);

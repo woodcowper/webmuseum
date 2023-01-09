@@ -1,5 +1,7 @@
 package com.webmuseum.museum.controllers;
 
+import java.util.ArrayList;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import com.webmuseum.museum.service.IRoleService;
 import com.webmuseum.museum.service.IUserService;
 import com.webmuseum.museum.utils.EmailHelper;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @Controller
@@ -35,10 +38,16 @@ public class AdminController {
 	private IEmailService emailService;
 
 	 /* User */
+
 	 @GetMapping("/user-list")
-	 public String userList(Model model) {
-		 model.addAttribute("users", userService.findAllUsers());
-		 return CONTROLLER_VIEW_DIR + "user-list";
+	 public String userList(@RequestParam(name="filterText", required=false) String filterText, Model model) {
+		if(filterText == null || filterText.isEmpty()){
+			model.addAttribute("users", userService.findAllUsers());
+		} else {
+			model.addAttribute("users", userService.findUsersEmailStartsWith(filterText));
+			model.addAttribute("filterText", filterText);
+		}
+		return CONTROLLER_VIEW_DIR + "user-list";
 	 }
  
 	 @GetMapping("/user-add")
@@ -49,17 +58,16 @@ public class AdminController {
 	 }
 
 	 @GetMapping("/user-gen-and-send-pass")
-	 public String userGenAndSendPass(@RequestParam(name="id", required=true) long id, Model model) {
+	 public String userGenAndSendPass(@RequestParam(name="id", required=true) long id, Model model, HttpServletRequest request) {
 		String newPass = userService.generatePassword();
 
 		if(userService.setNewPassword(id, newPass)){
 			User user = userService.findUserById(id).get();
 			EmailDetails emailDetails = new EmailDetails(user.getEmail(), "New password", EmailHelper.getNewPasswordTemplate(user.getEmail(), newPass));
-			boolean status = emailService.sendSimpleMail(emailDetails);
-			System.out.println("---STATUS: " + status + " SENDED TO " + user.getEmail());
+			emailService.sendSimpleMail(emailDetails);
 		}
 		
-		return userList(model);
+		return "redirect:" + request.getHeader("Referer");
 	 }
  
  
