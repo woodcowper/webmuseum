@@ -14,7 +14,6 @@
           </a>
   
           <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-            <li><a th:href="@{/main/}" class="nav-link px-2 text-white">Home</a></li>
             <li><a th:href="@{/main/event-list}" class="nav-link px-2 text-white">Events</a></li>
           </ul>
   
@@ -25,6 +24,7 @@
               <a th:href="@{/auth/register}" class="btn btn-warning">Sign-up</a>
             </div>
             <div sec:authorize="isAuthenticated()">
+              <a th:href="@{/main/main}" class="btn btn-primary">User panel</a>
               <a th:href="@{/auth/logout}" class="btn btn-warning">Logout</a>
             </div>
             
@@ -51,7 +51,7 @@
                 </li>
               </div>
               <div sec:authorize="hasRole('ROLE_ADMIN')">
-                <li><a th:href="@{/admin/manager-list}" class="nav-link text-white">Managers</a></li>
+                <li><a th:href="@{/admin/user-list}" class="nav-link text-white">Users</a></li>
               </div>
               <div sec:authorize="hasRole('ROLE_CLIENT')">
                 <li><a th:href="@{/client/subscribed-events-list}" class="nav-link text-white">Subscribed events</a></li>

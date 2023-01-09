@@ -6,8 +6,8 @@
      
     <form method="post"
           role="form"
-          th:action="@{/admin/manager-save}"
-          th:object="${manager}">
+          th:action="@{/admin/user-save}"
+          th:object="${user}">
 
       <input
           name="id"
@@ -50,9 +50,11 @@
             <option th:each="role : ${rolesList}" 
                     th:value="${role.id}" 
                     th:text="${role.name}" 
-                    th:selected="${manager.roles.contains(role.id)}"
+                    th:selected="${user.roles.contains(role.id)}"
                     data-placeholder="Select roles"></option>
         </select>
+        <p th:errors = "*{roles}" class="text-danger"
+           th:if="${#fields.hasErrors('roles')}"></p>
       </div>
 
 

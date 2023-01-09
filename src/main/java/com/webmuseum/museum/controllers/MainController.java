@@ -31,11 +31,6 @@ public class MainController {
 	@Autowired
     private ICategoryService categoryService;
 
-	@GetMapping("/")
-	public String index(Model model) {
-		return CONTROLLER_VIEW_DIR + "index";
-	}
-
 	@GetMapping("/main")
 	public String main(Model model) {
 		return CONTROLLER_VIEW_DIR + "main";
@@ -55,7 +50,7 @@ public class MainController {
 		return CONTROLLER_VIEW_DIR + "exhibit-details";
 	}
 
-	@GetMapping("/event-list")
+	@GetMapping({"/event-list", "/"})
     public String eventList(@RequestParam(name="categoryId", required=false) Long categoryId, Model model) { 
 		if(categoryId == null){
 			model.addAttribute("events", eventService.findAllFuturesEvents());

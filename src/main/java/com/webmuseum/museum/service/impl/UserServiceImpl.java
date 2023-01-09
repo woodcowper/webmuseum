@@ -143,6 +143,10 @@ public class UserServiceImpl implements IUserService {
         userDto.setName(user.getName());
         userDto.setEmail(user.getEmail());
         userDto.setRoles(roleService.getRolesIds(user.getRoles()));
+        userDto.setIsSuperAdmin(user.getRoles().contains(roleService.getSuperAdminRole()));
+        userDto.setIsAdmin(user.getRoles().contains(roleService.getAdminRole()));
+        userDto.setIsManager(user.getRoles().contains(roleService.getManagerRole()));
+        userDto.setIsClient(user.getRoles().contains(roleService.getClientRole()));
         return userDto;
     }
 

@@ -27,4 +27,12 @@ public class UserDto {
     private String password;
 
     private List<Long> roles = new ArrayList<>();
+
+    private Boolean isSuperAdmin;
+    
+    private Boolean isAdmin;
+
+    private Boolean isManager;
+
+    private Boolean isClient;
 }

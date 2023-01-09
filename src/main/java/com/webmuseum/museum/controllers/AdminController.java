@@ -34,22 +34,22 @@ public class AdminController {
 	@Autowired 
 	private IEmailService emailService;
 
-	 /* Manager */
-	 @GetMapping("/manager-list")
-	 public String managerList(Model model) {
-		 model.addAttribute("managers", userService.findAllManagers());
-		 return CONTROLLER_VIEW_DIR + "manager-list";
+	 /* User */
+	 @GetMapping("/user-list")
+	 public String userList(Model model) {
+		 model.addAttribute("users", userService.findAllUsers());
+		 return CONTROLLER_VIEW_DIR + "user-list";
 	 }
  
-	 @GetMapping("/manager-add")
-	 public String managerAdd(Model model) {
-		 model.addAttribute("manager", userService.createEmptyUserDtoForManager());
+	 @GetMapping("/user-add")
+	 public String userAdd(Model model) {
+		 model.addAttribute("user", userService.createEmptyUserDtoForClient());
 		 model.addAttribute("rolesList", roleService.findAllAvailableRoles());
-		 return CONTROLLER_VIEW_DIR + "manager-add";
+		 return CONTROLLER_VIEW_DIR + "user-add";
 	 }
 
-	 @GetMapping("/manager-gen-and-send-pass")
-	 public String managerGenAndSendPass(@RequestParam(name="id", required=true) long id, Model model) {
+	 @GetMapping("/user-gen-and-send-pass")
+	 public String userGenAndSendPass(@RequestParam(name="id", required=true) long id, Model model) {
 		String newPass = userService.generatePassword();
 
 		if(userService.setNewPassword(id, newPass)){
@@ -59,38 +59,44 @@ public class AdminController {
 			System.out.println("---STATUS: " + status + " SENDED TO " + user.getEmail());
 		}
 		
-		return managerList(model);
+		return userList(model);
 	 }
  
  
-	 @GetMapping("/manager-edit")
-	 public String managerEdit(@RequestParam long id, Model model) {
-		 UserDto manager = userService.getUserDtoById(id);
-		 model.addAttribute("manager", manager);
+	 @GetMapping("/user-edit")
+	 public String userEdit(@RequestParam long id, Model model) {
+		 UserDto user = userService.getUserDtoById(id);
+		 model.addAttribute("user", user);
 		 model.addAttribute("rolesList", roleService.findAllAvailableRoles());
-		 return CONTROLLER_VIEW_DIR + "manager-add";
+		 return CONTROLLER_VIEW_DIR + "user-add";
 	 }
  
-	 @PostMapping("/manager-save")
-	 public String managerSave(@Valid @ModelAttribute("manager") UserDto manager, BindingResult result, Model model) { 
-        if(manager.getId() != null && userService.checkIfExistsOthers(manager.getId(), manager.getEmail())){
+	 @PostMapping("/user-save")
+	 public String userSave(@Valid @ModelAttribute("user") UserDto user, BindingResult result, Model model) { 
+        if((user.getId() != null && userService.checkIfExistsOthers(user.getId(), user.getEmail())) || 
+			(user.getId() == null && userService.findUserByEmail(user.getEmail()) != null)){
             result.rejectValue("email", null,
                     "There is already an account registered with the same email");
         } 
+		if(user.getRoles().size() == 0){
+			result.rejectValue("roles", null,
+                    "Please select roles");
+		}
 		
 		if (result.hasErrors()) {
-			 model.addAttribute("manager", manager);
-			 return CONTROLLER_VIEW_DIR + "manager-add";
+			 model.addAttribute("user", user);
+			 model.addAttribute("rolesList", roleService.findAllAvailableRoles());
+			 return CONTROLLER_VIEW_DIR + "user-add";
 		 }
  
-		 userService.saveUser(manager);
-		 return "redirect:/" + CONTROLLER_VIEW_DIR + "manager-list";
+		 userService.saveUser(user);
+		 return "redirect:/" + CONTROLLER_VIEW_DIR + "user-list";
 	 }
  
-	 @GetMapping("/manager-delete")
-	 public String managerDelete(@RequestParam(name="id", required=true) long id, Model model) {
+	 @GetMapping("/user-delete")
+	 public String userDelete(@RequestParam(name="id", required=true) long id, Model model) {
 		 userService.deleteUser(id);
-		 return "redirect:/" + CONTROLLER_VIEW_DIR + "manager-list";
+		 return "redirect:/" + CONTROLLER_VIEW_DIR + "user-list";
 	 }
  
 	 /* END Manager */

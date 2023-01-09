@@ -3,3 +3,7 @@
     background-size: cover;
     background-position: center;
 }
+
+body > .container {
+    min-height: 65vh;
+}
