@@ -35,7 +35,13 @@ public class ClientController {
     @Autowired
 	private ICategoryService categoryService;
 
-    @GetMapping("/subscribed-events-list")
+
+    @GetMapping("/user-info")
+    public String userInfo(Model model) {
+        model.addAttribute("user", userService.getCurrentUserDto());
+        return CONTROLLER_VIEW_DIR + "user-info";
+    }
+        @GetMapping("/subscribed-events-list")
     public String subscribedEventsList(Model model) {
         model.addAttribute("events", eventService.findAllEventsForCurUser());
         return CONTROLLER_VIEW_DIR + "subscribed-events-list";

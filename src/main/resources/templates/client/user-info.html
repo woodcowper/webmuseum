@@ -1,0 +1,20 @@
+<div th:replace="fragments/header-with-sidebar"></div>
+
+
+<div class="row featurette">
+  <div class="col-md-12">
+    <p><b>Name: </b><span th:text="${user.name}"></span></p>
+    <p><b>Email: </b><span th:text="${user.email}"></span></p>
+    <p><b>Roles: </b> 
+          <span th:if="${user.isSuperAdmin}" class="badge text-bg-dark">Super Admin</span>
+          <span th:if="${user.isAdmin}" class="badge text-bg-success">Admin</span>
+          <span th:if="${user.isManager}" class="badge text-bg-warning">Manager</span>
+          <span th:if="${user.isClient}" class="badge text-bg-primary">Client</span>
+    </p>
+  </div>
+</div>
+
+
+
+
+<div th:replace="fragments/footer"></div>

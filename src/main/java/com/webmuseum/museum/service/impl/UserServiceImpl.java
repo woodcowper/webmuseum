@@ -138,10 +138,20 @@ public class UserServiceImpl implements IUserService {
                 .isPresent();
     }
 
+    @Override
     public User getCurrentUser(){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth.getPrincipal() instanceof AppUserPrincipal){
             return findUserByEmail(auth.getName());
+        } 
+        return null;
+    }
+
+    @Override
+    public UserDto getCurrentUserDto(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth.getPrincipal() instanceof AppUserPrincipal){
+            return mapToUserDto(findUserByEmail(auth.getName()));
         } 
         return null;
     }
