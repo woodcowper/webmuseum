@@ -10,10 +10,12 @@ import org.springframework.stereotype.Service;
 import com.webmuseum.museum.dto.CategoryDto;
 import com.webmuseum.museum.entity.Category;
 import com.webmuseum.museum.entity.CategoryDescription;
+import com.webmuseum.museum.entity.User;
 import com.webmuseum.museum.models.ECategoryType;
 import com.webmuseum.museum.repository.CategoryRepository;
 import com.webmuseum.museum.service.ICategoryService;
 import com.webmuseum.museum.service.ILanguageService;
+import com.webmuseum.museum.service.IUserService;
 import com.webmuseum.museum.utils.LanguageHelper;
 
 @Service
@@ -25,6 +27,9 @@ public class CategoryServiceImpl implements ICategoryService {
     @Autowired
     private ILanguageService languageService;
 
+    @Autowired
+    private IUserService userService;
+
     @Override
     public List<Category> findAllEventCategoriesWithIds(List<Long> ids){
         return findAllWithIds(ids, ECategoryType.EVENT);
@@ -33,6 +38,26 @@ public class CategoryServiceImpl implements ICategoryService {
     @Override
     public List<Category> findAllExhibitCategoriesWithIds(List<Long> ids){
         return findAllWithIds(ids, ECategoryType.EXHIBIT);
+    }
+
+    @Override
+    public List<CategoryDto> findAllEventCategoriesWithoutIds(List<Long> ids){
+        return  findAllCategoriesByType(ECategoryType.EVENT).stream()
+            .filter((category) -> !ids.contains(category.getId()))
+            .map((cat) -> mapToCategoryDto(cat, LanguageHelper.DEFAULS_LANGUAGE_ID))
+            .sorted((cat1, cat2) -> cat1.getName().compareTo(cat2.getName()))
+            .toList();
+    }
+
+    
+
+    @Override
+    public List<CategoryDto> findAllEventCategoriesForCurUser(){
+        User curUser = userService.getCurrentUser();
+        return curUser.getSubscribedCategoryEvents().stream()
+            .sorted((cat1, cat2) -> getName(cat1, LanguageHelper.DEFAULS_LANGUAGE_ID).compareTo(getName(cat2, LanguageHelper.DEFAULS_LANGUAGE_ID)))
+            .map((cat) -> mapToCategoryDto(cat, LanguageHelper.DEFAULS_LANGUAGE_ID))
+            .collect(Collectors.toList());
     }
 
     @Override
@@ -108,6 +133,38 @@ public class CategoryServiceImpl implements ICategoryService {
         return findAllCategoriesByType(type).stream()
             .filter(category ->  getName(category, languageId).equals(name))
             .count() > 0;
+    }
+
+    @Override
+    public boolean subscribeCategory(User user, long categorytId){
+        if (user.getSubscribedCategoryEvents().stream().anyMatch((cat) -> cat.getId() == categorytId)) {
+            return true;
+        }
+        Optional<Category> optCategory = getCategoryById(categorytId);
+        if (!optCategory.isPresent()) {
+            return false;
+        }
+        Category category = optCategory.get();
+        category.getSubscribers().add(user);
+        user.getSubscribedCategoryEvents().add(category);
+        userService.saveUser(user);
+        return true;
+    }
+
+    @Override
+    public boolean unsubscribeCategory(User user, long categorytId){
+        if (!user.getSubscribedCategoryEvents().stream().anyMatch((cat) -> cat.getId() == categorytId)) {
+            return true;
+        }
+        Optional<Category> optCategory = getCategoryById(categorytId);
+        if (!optCategory.isPresent()) {
+            return false;
+        }
+        Category category = optCategory.get();
+        category.getSubscribers().remove(user);
+        user.getSubscribedCategoryEvents().remove(category);
+        userService.saveUser(user);
+        return true;
     }
 
     private CategoryDto mapToCategoryDto(Category category, long languageId){

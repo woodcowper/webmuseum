@@ -1,0 +1,28 @@
+<div th:replace="fragments/header-with-sidebar"></div>
+
+
+<div class="container">
+    <h3>Subscribed events: <a th:href="@{'/main/event-list'}" class="btn btn-outline-success">Subscribe more</a></h3>
+      <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Data</th>
+            <th scope="col">Date</th>
+            <th scope="col">Controls</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr th:each="event, i: ${events}">
+                <td scope="row" th:text="${i.index + 1}" />
+                <td th:text="${event.name}" />
+                <td th:text="${event.date}" />
+                <td>
+                    <a th:href="@{/main/event-view(eventId=${event.id})}" class="btn btn-outline-primary">View</a>
+                    <a th:href="@{/client/unsubscribe-event(eventId=${event.id})}" class="btn btn-outline-danger">Unsubscribe</a>
+                </td>
+            </tr>
+      </table>
+</div>
+
+<div th:replace="fragments/footer"></div>

@@ -6,11 +6,17 @@ import java.util.Optional;
 import com.webmuseum.museum.dto.CategoryDto;
 import com.webmuseum.museum.entity.Category;
 import com.webmuseum.museum.entity.CategoryDescription;
+import com.webmuseum.museum.entity.User;
 import com.webmuseum.museum.models.ECategoryType;
 
 public interface ICategoryService {
 
+
+    List<CategoryDto> findAllEventCategoriesForCurUser();
+
     List<Category> findAllEventCategoriesWithIds(List<Long> ids);
+
+    List<CategoryDto> findAllEventCategoriesWithoutIds(List<Long> ids);
 
     List<Category> findAllExhibitCategoriesWithIds(List<Long> ids);
 
@@ -39,5 +45,9 @@ public interface ICategoryService {
     boolean checkIfExistsOthers(Long categoryId, String name, ECategoryType type, long languageId);
 
     CategoryDescription getDescription(Category category, long languageId);
+
+    boolean subscribeCategory(User user, long categoryId);
+
+    boolean unsubscribeCategory(User user, long categorytId);
     
 }

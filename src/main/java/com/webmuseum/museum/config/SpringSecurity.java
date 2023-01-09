@@ -35,8 +35,9 @@ public class SpringSecurity {
                 //.requestMatchers("/manager/**").permitAll()
                 .requestMatchers("/auth/register/**").permitAll()
                 .requestMatchers("/auth/index").permitAll()
-                .requestMatchers("/auth/users", "/manager/**").hasRole("MANAGER")
-                .requestMatchers("/auth/users", "/manager/**", "/admin/**").hasRole("ADMIN")
+                .requestMatchers("/client/**").hasRole("CLIENT")
+                .requestMatchers("/client/**", "/manager/**").hasRole("MANAGER")
+                .requestMatchers("/client/**", "/manager/**", "/admin/**").hasRole("ADMIN")
                 .and()
                 .userDetailsService(userDetailsService)
                 .formLogin(

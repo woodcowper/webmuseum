@@ -53,6 +53,10 @@
               <div sec:authorize="hasRole('ROLE_ADMIN')">
                 <li><a th:href="@{/admin/manager-list}" class="nav-link text-white">Managers</a></li>
               </div>
+              <div sec:authorize="hasRole('ROLE_CLIENT')">
+                <li><a th:href="@{/client/subscribed-events-list}" class="nav-link text-white">Subscribed events</a></li>
+                <li><a th:href="@{/client/subscribed-category-list}" class="nav-link text-white">Subscribed event categories</a></li>
+              </div>
             </ul>
           </div>
         </div>
