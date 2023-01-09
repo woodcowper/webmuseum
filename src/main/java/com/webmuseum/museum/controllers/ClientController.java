@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.webmuseum.museum.dto.ChangePasswordDto;
 import com.webmuseum.museum.dto.SubscribersEventCategoryDto;
+import com.webmuseum.museum.dto.UserDto;
 import com.webmuseum.museum.entity.Category;
 import com.webmuseum.museum.entity.User;
 import com.webmuseum.museum.service.ICategoryService;
@@ -41,7 +43,7 @@ public class ClientController {
         model.addAttribute("user", userService.getCurrentUserDto());
         return CONTROLLER_VIEW_DIR + "user-info";
     }
-        @GetMapping("/subscribed-events-list")
+    @GetMapping("/subscribed-events-list")
     public String subscribedEventsList(Model model) {
         model.addAttribute("events", eventService.findAllEventsForCurUser());
         return CONTROLLER_VIEW_DIR + "subscribed-events-list";
@@ -100,5 +102,34 @@ public class ClientController {
         return "redirect:/" + CONTROLLER_VIEW_DIR + "subscribed-category-list";
     }
 
+    @GetMapping("/change-password")
+    public String changePassword(Model model) {
+        model.addAttribute("model", new ChangePasswordDto());
+        return CONTROLLER_VIEW_DIR + "change-password";
+    }
+
+    @PostMapping("/change-password-save")
+    public String changePasswordSave(@Valid @ModelAttribute("model") ChangePasswordDto changePasswordModel, BindingResult result, Model model) {
+        if(!changePasswordModel.getNewPassword().equals(changePasswordModel.getNewPasswordRepeat())){
+            result.rejectValue("newPassword", null,
+                    "Password and password confirmation are not the same");
+        }
+
+        User curUser = userService.getCurrentUser();
+        if(!userService.getPasswordEncoder().matches(changePasswordModel.getOldPassword(), curUser.getPassword())){
+            result.rejectValue("oldPassword", null,
+                    "Old password is incorect");
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("model", changePasswordModel);
+            return CONTROLLER_VIEW_DIR + "change-password";
+        }
+        
+        UserDto curUserDto = userService.getCurrentUserDto();
+        curUserDto.setPassword(changePasswordModel.getNewPassword());
+        userService.saveUser(curUserDto);
+        return "redirect:/" + CONTROLLER_VIEW_DIR + "change-password?success=true";
+    }
     
 }

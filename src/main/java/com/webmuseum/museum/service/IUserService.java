@@ -3,6 +3,8 @@ package com.webmuseum.museum.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import com.webmuseum.museum.dto.UserDto;
 import com.webmuseum.museum.entity.User;
 
@@ -40,6 +42,8 @@ public interface IUserService {
     User getCurrentUser();
 
     UserDto getCurrentUserDto();
+
+    PasswordEncoder getPasswordEncoder();
 
 
 }

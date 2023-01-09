@@ -156,6 +156,11 @@ public class UserServiceImpl implements IUserService {
         return null;
     }
 
+    @Override
+    public PasswordEncoder getPasswordEncoder(){
+        return passwordEncoder;
+    }
+
     private UserDto mapToUserDto(User user){
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
