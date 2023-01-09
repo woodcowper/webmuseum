@@ -8,13 +8,15 @@
           <tr>
             <th scope="col">#</th>
             <th scope="col">Data</th>
+            <th scope="col">Date</th>
             <th scope="col">Controls</th>
           </tr>
         </thead>
         <tbody>
             <tr th:each="event, i: ${events}">
-              <td scope="row" th:text="${i.index + 1}" />
+                <td scope="row" th:text="${i.index + 1}" />
                 <td th:text="${event.name}" />
+                <td th:text="${event.date}" />
                 <td>
                     <a th:href="@{/manager/event-edit(id=${event.id})}" class="btn btn-outline-warning">Edit</a>
                     <a th:href="@{/manager/event-delete(id=${event.id})}" class="btn btn-outline-danger">Delete</a>

@@ -7,7 +7,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.webmuseum.museum.dto.EventDto;
 import com.webmuseum.museum.dto.ExhibitViewDto;
+import com.webmuseum.museum.service.ICategoryService;
+import com.webmuseum.museum.service.IEventService;
 import com.webmuseum.museum.service.IExhibitService;
 
 @Controller
@@ -17,6 +20,12 @@ public class MainController {
 
 	@Autowired
     private IExhibitService exhibitService;
+
+	@Autowired
+    private IEventService eventService;
+
+	@Autowired
+    private ICategoryService categoryService;
 
 	@GetMapping({"/main", "/"})
 	public String main(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
@@ -37,5 +46,22 @@ public class MainController {
 		model.addAttribute("exhibit", exhibit);
 		return CONTROLLER_VIEW_DIR + "exhibit-details";
 	}
+
+	@GetMapping("/event-list")
+    public String eventList(@RequestParam(name="categoryId", required=false) Long categoryId,Model model) {
+		if(categoryId == null){
+			model.addAttribute("events", eventService.findAllFuturesEvents());
+		} else {
+			model.addAttribute("events", eventService.findAllFuturesEventsForCategory(categoryId));
+		}
+		model.addAttribute("categories", categoryService.findAllEventCategories());
+		return CONTROLLER_VIEW_DIR + "event-list";
+    }
+
+	@GetMapping("/event-view")
+    public String eventView(@RequestParam Long eventId, Model model) {
+		model.addAttribute("event", eventService.getEventViewDto(eventId));
+		return CONTROLLER_VIEW_DIR + "event-view";
+    }
 
 }

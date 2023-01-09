@@ -1,0 +1,32 @@
+<div th:replace="fragments/header"></div>
+
+<div class="row mb-4">
+  <div class="col-12">
+    <h2>Events</h2>
+    <h5>
+      <a th:href="@{/main/event-list}" class="badge text-bg-secondary me-1">All</a>
+      <a th:href="@{/main/event-list(categoryId=${category.id})}" class="badge text-bg-secondary me-2" th:each="category: ${categories}" th:text="${category.name}"></a>
+    </h5> 
+  </div>
+</div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+  <div class="col" th:each="event, i: ${events}">
+    <div class="card shadow-sm">
+      <svg th:if="${event.imgUrl == null}" class="bd-placeholder-img card-img-top" width="100%" height="225" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"></rect><text x="43%" y="50%" fill="#eceeef" dy=".3em">No image</text></svg>
+      <div th:if="${event.imgUrl != null}" class="bd-placeholder-img card-img-top img-block" th:style="'background-image: url(\'' + ${event.imgUrl} + '\');'"> </div>
+      <div class="card-body">
+        <h5 th:text="${event.name}"></h5>
+        <span class="badge text-bg-secondary me-1" th:text="${event.date}"></span>
+        <p class="card-text" th:text="${event.description}"></p>
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="">
+            <a th:href="@{/main/event-view(eventId=${event.id})}" class="btn btn-outline-primary">View</a>
+            <a  class="btn btn-outline-primary">Subscribe</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="fragments/footer"></div>

@@ -1,0 +1,29 @@
+<div th:replace="fragments/header"></div>
+
+<div class="row featurette" th:if="${event.imgUrl != null}">
+  <div class="col-md-7">
+    <h2 class="featurette-heading fw-normal lh-1 mb-3" th:text="${event.name}"></h2>
+    <span th:each="category, itemStat : *{event.categories}" class="badge text-bg-primary me-1" th:text="${category}"></span>
+    <p class="lead mt-2" th:text="'Date: ' + ${event.date}"></p>
+    <p class="lead" th:text="${event.description}"></p>
+    <a  class="btn btn-outline-primary mb-4">Subscribe</a>
+  </div>
+  <div class="col-md-5">
+     <img th:src="${event.imgUrl}" class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto">
+  </div>
+</div>
+
+<div class="row featurette" th:if="${event.imgUrl == null}">
+  <div class="col-md-12">
+    <h2 class="featurette-heading fw-normal lh-1" th:text="${event.name}"></h2>
+    <span th:each="category, itemStat : *{event.categories}" class="badge text-bg-primary me-1" th:text="${category}"></span>
+    <p th:text="'Date: ' + ${event.date}"></p>
+    <p class="lead" th:text="${event.description}"></p>
+    <a  class="btn btn-outline-primary mb-2">Subscribe</a>
+  </div>
+</div>
+
+
+
+
+<div th:replace="fragments/footer"></div>
