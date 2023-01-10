@@ -17,7 +17,7 @@
       <div class="card-body">
         <h5 th:text="${event.name}"></h5>
         <span class="badge text-bg-secondary me-1" th:text="${event.date}"></span>
-        <p class="card-text" th:text="${event.description}"></p>
+        <p class="card-text" th:text="${event.description.substring(0, event.description.length() < 100 ? event.description.length(): 100 ) + '...'}"></p>
         <div class="d-flex justify-content-between align-items-center">
           <div class="">
             <a th:href="@{/main/event-view(eventId=${event.id})}" class="btn btn-outline-primary">View</a>
