@@ -13,9 +13,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExhibitViewDto {
+    
+    private Long id;
+
     private String name;
 
     private String imgUrl;
+
+    private String qrUrl;
 
     private String description;
 

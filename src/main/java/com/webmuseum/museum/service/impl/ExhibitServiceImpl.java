@@ -59,6 +59,15 @@ public class ExhibitServiceImpl implements IExhibitService {
     @Autowired
     private ILanguageService languageService;
 
+    
+    @Override
+    public List<ExhibitViewDto> findAllExhibitViewDto(){
+        return exhibitRepository.findAll().stream()
+            .map((exhibit) -> getExhibitViewDto(exhibit.getId(), LanguageHelper.DEFAULS_LANGUAGE_ID))
+            .sorted((exhibit1, exhibit2) -> exhibit1.getName().compareTo(exhibit2.getName()))
+            .collect(Collectors.toList());
+    }
+
     @Override
     public List<ExhibitDto> findAllExhibits(){
         return findAllExhibits(LanguageHelper.DEFAULS_LANGUAGE_ID);
@@ -165,12 +174,11 @@ public class ExhibitServiceImpl implements IExhibitService {
     @Override
     public ExhibitViewDto getExhibitViewDto(Long exhibitId, Long languageId){
         Optional<Exhibit> exhibitOpt = getExhibitById(exhibitId);
-		if(!exhibitOpt.isPresent()){
-			// return error
-		}
         // exhibit info
         Exhibit exhibit = exhibitOpt.get();
         ExhibitViewDto exhibitViewDto = new ExhibitViewDto();
+        exhibitViewDto.setId(exhibit.getId());
+        exhibitViewDto.setQrUrl(ResourceHelper.getQRUrl(exhibit.getQrFileName()));
         if(getDescription(exhibit, languageId) == null){
             exhibitViewDto.setName(getName(exhibit, LanguageHelper.DEFAULS_LANGUAGE_ID) + LanguageHelper.NO_TRANSLATION_MESSAGE);
             exhibitViewDto.setDescription(getDesc(exhibit, LanguageHelper.DEFAULS_LANGUAGE_ID));

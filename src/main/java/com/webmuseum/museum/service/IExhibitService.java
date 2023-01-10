@@ -10,6 +10,9 @@ import com.webmuseum.museum.entity.Exhibit;
 import com.webmuseum.museum.entity.ExhibitDescription;
 
 public interface IExhibitService {
+
+    List<ExhibitViewDto> findAllExhibitViewDto();
+
     List<ExhibitDto> findAllExhibits();
 
     List<ExhibitDto> findAllExhibits(long languageId);

@@ -6,9 +6,11 @@
       <table class="table">
         <thead class="table-dark">
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">Data</th>
-            <th scope="col">Controls</th>
+            <th scope="col" width="5%">#</th>
+            <th scope="col" width="30%">Name</th>
+            <th scope="col" width="25%">Categories</th>
+            <th scope="col" width="25%">Authors</th>
+            <th scope="col" width="15%">Controls</th>
           </tr>
         </thead>
         <tbody>
@@ -16,7 +18,13 @@
                 <td scope="row" th:text="${i.index + 1}" />
                 <td th:text="${exhibit.name}" />
                 <td>
-                    <button class="btn btn-outline-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <span th:each="category: ${exhibit.categories}" th:text="${category.substring(0, category.length() < 25 ? category.length(): 25 )} + ${category.length() < 25 ? '' : '...'}" class="badge text-bg-warning ms-1 mb-1"></span>
+                </td>
+                <td>
+                  <span th:each="author: ${exhibit.authors}" th:text="${author.author.name.substring(0, author.author.name.length() < 25 ? author.author.name.length(): 25 )} + ${author.author.name.length() < 25 ? '' : '...'}" class="badge text-bg-light ms-1 mb-1"></span>
+                </td>
+                <td>
+                    <button class="btn btn-outline-primary dropdown-toggle  mb-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                       View
                     </button>
                     <ul class="dropdown-menu">
@@ -27,10 +35,10 @@
                         <a class="dropdown-item" th:href="@{/main/exhibit-details(exhibitId=${exhibit.id}, languageId=${language.id})}" th:text="${language.name}"></a>
                       </li>
                     </ul>
-                    <a th:href="${exhibit.qrUrl}" class="btn btn-outline-primary">View QR </a>
-                    <a th:href="@{/manager/exhibit-edit(id=${exhibit.id})}" class="btn btn-outline-warning">Edit</a>
-                    <a th:href="@{/manager/exhibit-delete(id=${exhibit.id})}" class="btn btn-outline-danger">Delete</a>
-                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <a th:href="${exhibit.qrUrl}" class="btn btn-outline-primary mb-1">View QR </a>
+                    <a th:href="@{/manager/exhibit-edit(id=${exhibit.id})}" class="btn btn-outline-warning mb-1">Edit</a>
+                    <a th:href="@{/manager/exhibit-delete(id=${exhibit.id})}" class="btn btn-outline-danger mb-1">Delete</a>
+                    <button class="btn btn-secondary dropdown-toggle mb-1" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                       Translations
                     </button>
                     <ul class="dropdown-menu">
