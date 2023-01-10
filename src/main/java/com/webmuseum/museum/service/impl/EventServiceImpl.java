@@ -90,7 +90,7 @@ public class EventServiceImpl implements IEventService {
         Date curDate = new Date();
         return eventRepository.findAll().stream()
             .filter((event) -> event.getDate().compareTo(curDate) >= 0)
-            .sorted((event1, event2) -> event1.getName().compareTo(event2.getName()))
+            .sorted((event1, event2) -> event1.getDate().compareTo(event2.getDate()))
             .map((event) -> mapToEventDto(event))
             .collect(Collectors.toList());
     }
@@ -101,7 +101,7 @@ public class EventServiceImpl implements IEventService {
         Date curDate = new Date();
         return category.getEvents().stream()
             .filter((event) -> event.getDate().compareTo(curDate) > 0)
-            .sorted((event1, event2) -> event1.getName().compareTo(event2.getName()))
+            .sorted((event1, event2) -> event1.getDate().compareTo(event2.getDate()))
             .map((event) -> mapToEventDto(event))
             .collect(Collectors.toList());
     }
