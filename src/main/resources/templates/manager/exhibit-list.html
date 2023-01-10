@@ -20,7 +20,7 @@
                       View
                     </button>
                     <ul class="dropdown-menu">
-                      <li th:each="language: ${languages}">
+                      <li>
                         <a class="dropdown-item" th:href="@{/main/exhibit-details(exhibitId=${exhibit.id}, languageId=${default_language.id})}" th:text="${default_language.name}"></a>
                       </li>
                       <li th:each="language: ${languages}">
