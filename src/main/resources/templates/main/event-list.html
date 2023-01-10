@@ -4,8 +4,8 @@
   <div class="col-12">
     <h2>Events</h2>
     <h5>
-      <a th:href="@{/main/event-list}" class="badge text-bg-secondary me-1">All</a>
-      <a th:href="@{/main/event-list(categoryId=${category.id})}" class="badge text-bg-secondary me-2" th:each="category: ${categories}" th:text="${category.name}"></a>
+      <a th:href="@{/main/event-list}" th:class="'badge me-1 ' + ${curCategoryId == null ? 'text-bg-primary' : 'text-bg-secondary'}">All</a>
+      <a th:href="@{/main/event-list(categoryId=${category.id})}" th:class="'badge me-2 ' + ${curCategoryId == category.id ? 'text-bg-primary' : 'text-bg-secondary'}" th:each="category: ${categories}" th:text="${category.name}"></a>
     </h5> 
   </div>
 </div>

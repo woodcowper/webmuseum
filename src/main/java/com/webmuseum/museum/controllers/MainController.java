@@ -58,6 +58,8 @@ public class MainController {
 			model.addAttribute("events", eventService.findAllFuturesEventsForCategory(categoryId));
 		}
 		model.addAttribute("categories", categoryService.findAllEventCategories());
+		model.addAttribute("curCategoryId", categoryId);
+
 		return CONTROLLER_VIEW_DIR + "event-list";
     }
 
