@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+  <head>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}" />
+    <link th:rel="stylesheet" th:href="@{/webjars/select2/4.0.13/css/select2.min.css}" />
+    <link th:rel="stylesheet" th:href="@{/css/styles.css}" />
+    <title>Web museum</title>
+  </head>
+  <body>
+    <header class="p-3 text-bg-dark mb-5">
+      <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <a th:href="@{/main}" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+          </a>
+  
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+            <li><a th:href="@{/main/event-list}" class="nav-link px-2 text-white">Events</a></li>
+          </ul>
+  
+  
+          <div class="text-end">
+            <div sec:authorize="!isAuthenticated()">
+              <a th:href="@{/auth/login}" class="btn btn-outline-light me-2">Login</a>
+              <a th:href="@{/auth/register}" class="btn btn-warning">Sign-up</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+              <a th:href="@{/main/main}" class="btn btn-primary">User panel</a>
+              <a th:href="@{/auth/logout}" class="btn btn-warning">Logout</a>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </header>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+
+
+    
+
+    

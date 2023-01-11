@@ -1,0 +1,151 @@
+<div th:replace="fragments/header-with-sidebar"></div>
+
+
+<div class="container">
+    <h3>Add exhibit</h3>
+     
+    <form method="post"
+          role="form"
+          th:action="@{/manager/exhibit-save}"
+          th:object="${exhibit}"
+          enctype="multipart/form-data">
+
+      <input
+          name="id"
+          th:field="*{id}"
+          type="hidden"
+      />
+
+      <input
+          name="imgFileName"
+          id="imgFileName"
+          th:field="*{imgFileName}"
+          type="hidden"
+      />
+
+      <input
+          name="languageId"
+          th:field="*{languageId}"
+          type="hidden"
+      />
+
+      <div th:if="${isTranslations}">
+        <input
+            name="categories"
+            th:field="*{categories}"
+            type="hidden"
+            id="categoriesFld"
+        />
+        <input
+            name="imgUrl"
+            th:field="*{imgUrl}"
+            type="hidden"
+        />
+        <div th:each="author, itemStat : *{authors}">
+          <input th:field="*{authors[__${itemStat.index}__].exhibitId}" type="hidden" >
+          <input th:field="*{authors[__${itemStat.index}__].authorId}" type="hidden">
+          <input th:field="*{authors[__${itemStat.index}__].collectionId}" type="hidden">
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Name</label>
+        <input
+          class="form-control"
+          id="name"
+          name="name"
+          placeholder="Enter name"
+          th:field="*{name}"
+          type="text"
+        />
+        <p th:errors = "*{name}" class="text-danger"
+              th:if="${#fields.hasErrors('name')}"></p>
+        
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label">Description</label>
+        <textarea
+                class="form-control"
+                id="description"
+                name="description"
+                placeholder="Enter description"
+                th:field="*{description}"
+                type="text"
+        ></textarea>
+        <div th:errors = "*{description}" class="text-danger"
+           th:if="${#fields.hasErrors('description')}"></div>
+      </div>
+
+      <div class="mb-3" id="select-img-block" th:if="!${isTranslations}">
+        <label class="form-label">Image</label>
+        <input
+          class="form-control"
+          id="image"
+          name="image"
+          placeholder="Select image"
+          th:field="*{image}"
+          type="file"
+        />
+        <p th:errors = "*{image}" class="text-danger"
+              th:if="${#fields.hasErrors('image')}"></p>
+      </div>
+
+      <div class="mb-3" id="select-img-block" th:if="!${isTranslations}">
+        <label class="form-label">Categories</label>
+        <select th:field="*{categories}" multiple class="w-100">
+            <option th:each="category : ${categoriesList}" 
+                    th:value="${category.id}" 
+                    th:text="${category.name}" 
+                    th:selected="${exhibit.categories.contains(category.id)}"
+                    data-placeholder="Select categories"></option>
+        </select>
+      </div>
+
+      <div class="mb-3" id="img-block" th:if="!${isTranslations}">
+        <div class="row">
+          <div class="col-3">
+            <img th:src="${exhibit.imgUrl}" class="w-100" id="img-tag">
+          </div>
+        </div>
+        <button type="button" id="delete-img" class="btn btn-outline-danger">Delete image</button>
+      </div>
+
+      <div id="author-list-section" th:if="!${isTranslations}">
+        <div id="author-list">
+          <div th:each="author, itemStat : *{authors}" class="mb-3 img-thumbnail" th:attr="data-idx=${itemStat.index}" th:id="'author-block-' + ${itemStat.index}">
+            <input th:field="*{authors[__${itemStat.index}__].exhibitId}" type="hidden" th:id="'exhibit-id-' + ${itemStat.index}">
+            <label class="form-label">Author</label>
+            <select th:field="*{authors[__${itemStat.index}__].authorId}" class="w-100 mb-3 author-list-author-select" th:attr="data-start-val=*{authors[__${itemStat.index}__].authorId}">
+                <option value="">None</option>
+            </select>
+            <label class="form-label">Collection</label>
+            <select th:field="*{authors[__${itemStat.index}__].collectionId}" class="w-100 mb-3 collection-select" th:attr="data-start-val=*{authors[__${itemStat.index}__].collectionId}">
+                <option value="">None</option>
+            </select>
+
+            <button type="button" th:id="'delete-author-' + ${itemStat.index}" class="mt-3 btn btn-outline-danger btn-delete-author">Delete author</button>
+          </div>
+        </div>
+        <button type="button" id="btn-add-author" class="btn btn-outline-success mb-3">Add author</button>
+      </div>
+      
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+
+    </form>
+</div>
+
+<script th:inline="javascript">
+
+  /*<![CDATA[*/
+  
+     var authors = /*[[${authorsList}]]*/ null;
+
+   /*]]>*/
+</script> 
+
+
+<div th:replace="fragments/footer"></div>
+

@@ -1,0 +1,72 @@
+<div th:replace="fragments/header-with-sidebar"></div>
+
+<div class="container">
+  <div class="row col-md-8 offset-md-2">
+    <div class="card">
+      <div class="card-header">
+          <h2 class="text-center">Registration</h2>
+      </div>
+      <div th:if="${param.success}">
+          <div class="alert alert-info">
+            You have successfully registered our app!
+          </div>
+      </div>
+      <div class="card-body">
+          <form
+            method="post"
+            role="form"
+            th:action="@{/auth/register/save}"
+            th:object="${user}"
+          >
+            <div class="form-group mb-3">
+              <label class="form-label">Full Name</label>
+              <input
+                      class="form-control"
+                      id="name"
+                      name="name"
+                      placeholder="Enter full name"
+                      th:field="*{name}"
+                      type="text"
+              />
+              <p th:errors = "*{name}" class="text-danger"
+              th:if="${#fields.hasErrors('name')}"></p>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Email</label>
+              <input
+                      class="form-control"
+                      id="email"
+                      name="email"
+                      placeholder="Enter email address"
+                      th:field="*{email}"
+                      type="email"
+              />
+              <p th:errors = "*{email}" class="text-danger"
+                 th:if="${#fields.hasErrors('email')}"></p>
+            </div>
+
+            <div class="form-group mb-3">
+              <label class="form-label">Password</label>
+              <input
+                      class="form-control"
+                      id="password"
+                      name="password"
+                      placeholder="Enter password"
+                      th:field="*{password}"
+                      type="password"
+              />
+              <p th:errors = "*{password}" class="text-danger"
+                 th:if="${#fields.hasErrors('password')}"></p>
+            </div>
+            <div class="form-group">
+              <button class="btn btn-primary" type="submit">Register</button>
+              <span>Already registered? <a th:href="@{/auth/login}">Login here</a></span>
+            </div>
+          </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div th:replace="fragments/footer"></div>

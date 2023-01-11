@@ -1,0 +1,33 @@
+<div th:replace="fragments/header-with-sidebar"></div>
+
+
+<div class="container">
+    <h3>Subscribe on event categories</h3>
+     
+    <form method="post"
+          role="form"
+          th:action="@{/client/subscribed-category-save}"
+          th:object="${subscribedCategory}"
+          enctype="multipart/form-data">
+
+      <div class="mb-3" id="select-img-block">
+        <label class="form-label">Categories</label>
+        <select th:field="*{categories}" multiple class="w-100">
+            <option th:each="category : ${categoriesList}" 
+                    th:value="${category.id}" 
+                    th:text="${category.name}" 
+                    th:selected="${subscribedCategory.categories.contains(category.id)}"
+                    data-placeholder="Select categories"></option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <button class="btn btn-primary" type="submit">Save</button>
+      </div>
+
+    </form>
+</div>
+
+
+<div th:replace="fragments/footer"></div>
+

@@ -1,0 +1,9 @@
+.img-block {
+    height: 225px;
+    background-size: cover;
+    background-position: center;
+}
+
+body > .container {
+    min-height: 65vh;
+}

@@ -1,0 +1,35 @@
+<div th:replace="fragments/header-with-sidebar"></div>
+
+
+<div class="container">
+    <h3>Authors: <a th:href="@{/manager/author-add}" class="btn btn-outline-success">Add</a></h3>
+      <table class="table">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Data</th>
+            <th scope="col">Controls</th>
+          </tr>
+        </thead>
+        <tbody>
+            <tr th:each="author, i: ${authors}">
+              <td scope="row" th:text="${i.index + 1}" />
+                <td th:text="${author.fullName}" />
+                <td>
+                    <a th:href="@{/manager/author-edit(id=${author.id})}" class="btn btn-outline-warning">Edit</a>
+                    <a th:href="@{/manager/author-delete(id=${author.id})}" class="btn btn-outline-danger">Delete</a>
+                    <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                      Translations
+                    </button>
+                    <ul class="dropdown-menu">
+                      <li th:each="language: ${languages}">
+                        <a class="dropdown-item" th:href="@{/manager/author-translation(authorId=${author.id}, languageId=${language.id})}" th:text="${language.name}"></a>
+                      </li>
+                    </ul>
+                    <a th:href="@{/manager/collection-list(authorId=${author.id})}" class="btn btn-info">Collections</a>
+                </td>
+            </tr>
+      </table>
+</div>
+
+<div th:replace="fragments/footer"></div>

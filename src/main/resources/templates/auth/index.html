@@ -1,0 +1,16 @@
+<div th:replace="fragments/header-with-sidebar"></div>
+
+
+    <div class="row">
+        <h1 class="text-center"> Registration and Login System </h1>
+
+          <div sec:authorize="isAuthenticated()">
+            Logged user: <span sec:authentication="name">Bob</span>
+            Roles: <span sec:authentication="principal.authorities"></span>
+          </div>
+         
+    </div>
+
+
+
+<div th:replace="fragments/footer"></div>
